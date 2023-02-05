@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id           Int       @id @default(autoincrement())
+  user_type         UserRole  @default(CUSTOMER)
+  user_email        String    @unique
+  user_phone        String
+  user_address      String?
+  user_firstname    String?
+  user_lastname     String?
+  user_is_verified  Boolean   @default(false)
+  user_confirm_code String?
+  order             Order[]
+  payment           Payment[]
+}
+
+model Category {
+  category_id   Int       @id @default(autoincrement())
+  category_name String    @unique
+  category_slug String    @unique
+  category_icon String
+  products      Product[]
+}
+
+model Product {
+  product_id          Int              @id @default(autoincrement())
+  product_name        String
+  product_image       String
+  product_description String
+  product_price       String
+  category            Category         @relation(fields: [product_category_id], references: [category_id])
+  product_category_id Int
+  orders              ProductsOrders[]
+}
+
+model ProductsOrders {
+  product    Product @relation(fields: [product_id], references: [product_id])
+  product_id Int
+  order      Order   @relation(fields: [order_id], references: [order_id])
+  order_id   String
+  amount     Int
+
+  @@id([product_id, order_id])
+}
+
+model Order {
+  order_id         String           @id @default(uuid())
+  order_created_at DateTime         @default(now())
+  order_price      Decimal
+  order_status     OrderStatus      @default(HOLD)
+  products         ProductsOrders[]
+  user             User             @relation(fields: [order_user_id], references: [user_id])
+  order_user_id    Int
+  payment          Payment          @relation(fields: [order_payment_id], references: [payment_id])
+  order_payment_id String           @unique
+}
+
+model Payment {
+  payment_id      String      @id @default(uuid())
+  payment_date    DateTime    @default(now())
+  payment_type    PaymentType
+  order           Order?
+  user            User        @relation(fields: [payment_user_id], references: [user_id])
+  payment_user_id Int
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  HOLD
+  PAID
+}
+
+enum PaymentType {
+  CASH
+  CREDIT
+}
