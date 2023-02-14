@@ -8,20 +8,21 @@ datasource db {
 }
 
 model User {
-  user_id           Int        @id @default(autoincrement())
-  user_type         UserRole   @default(CUSTOMER)
-  user_email        String     @unique
-  user_phone        String
-  user_password     String
-  user_address      String?
-  user_firstname    String?
-  user_lastname     String?
-  user_is_verified  Boolean    @default(false)
-  user_confirm_code String?
-  order             Order[]
-  payment           Payment[]
-  delivery          Delivery[]
-  feedback          Feedback[]
+  user_id            Int        @id @default(autoincrement())
+  user_type          UserRole   @default(CUSTOMER)
+  user_email         String     @unique
+  user_phone         String
+  user_password      String
+  user_address       String?
+  user_firstname     String?
+  user_lastname      String?
+  user_is_verified   Boolean    @default(false)
+  user_confirm_code  String?
+  user_refresh_token String?
+  order              Order[]
+  payment            Payment[]
+  delivery           Delivery[]
+  feedback           Feedback[]
 }
 
 model Category {
