@@ -4,10 +4,12 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { EmailModule } from 'src/email/email.module';
 import { UserModule } from 'src/user/user.module';
+import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [JwtModule, EmailModule, UserModule],
-  providers: [AuthService],
+  providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
+  imports: [JwtModule, EmailModule, UserModule, PassportModule],
   controllers: [AuthController]
 })
 export class AuthModule { }

@@ -25,8 +25,6 @@ export class EmailService {
                 `
             });
         } catch (error) {
-            console.log(error);
-
             let errorMessage = 'Error happened on seding email';
 
             if (error instanceof Error && error.message.trim().length > 0) {
