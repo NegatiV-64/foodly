@@ -55,15 +55,17 @@ model ProductsOrders {
 }
 
 model Order {
-  order_id         String           @id @default(uuid())
-  order_created_at DateTime         @default(now())
-  order_price      Decimal
-  order_status     OrderStatus      @default(HOLD)
-  products         ProductsOrders[]
-  user             User             @relation(fields: [order_user_id], references: [user_id])
-  order_user_id    Int
-  payment          Payment          @relation(fields: [order_payment_id], references: [payment_id])
-  order_payment_id String           @unique
+  order_id          String           @id @default(uuid())
+  order_created_at  DateTime         @default(now())
+  order_price       Decimal
+  order_status      OrderStatus      @default(HOLD)
+  products          ProductsOrders[]
+  user              User             @relation(fields: [order_user_id], references: [user_id])
+  order_user_id     Int
+  payment           Payment          @relation(fields: [order_payment_id], references: [payment_id])
+  order_payment_id  String           @unique
+  delivery          Delivery         @relation(fields: [order_delivery_id], references: [delivery_id])
+  order_delivery_id String           @unique
 }
 
 model Payment {
@@ -77,12 +79,14 @@ model Payment {
 
 model Delivery {
   delivery_id      String         @id @default(uuid())
-  user             User           @relation(fields: [delivery_boy], references: [user_id])
-  delivery_boy     Int
+  delivery_user    User?          @relation(fields: [delivery_boy], references: [user_id])
+  delivery_boy     Int?
   delivery_status  DeliveryStatus
   delivery_price   Decimal
   delivery_address String
   delivery_date    DateTime?
+  delivery_order   String
+  Order            Order?
 }
 
 model Feedback {
