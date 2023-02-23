@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/shared/decorators';
 import { RefreshTokenGuard } from 'src/shared/guards';
 import { AuthService } from './auth.service';
@@ -13,6 +13,9 @@ import { LoginResponse, RefreshResponse, RegisterResponse, VerifyResponse } from
 export class AuthController {
     constructor(private authService: AuthService) { }
 
+    @ApiOperation({
+        description: 'Creates a new customer account. After successful registration, an email is sent to the user with a link to verify the account.',
+    })
     @ApiCreatedResponse({
         type: RegisterResponse,
         description: 'User was created, now waiting for verification'
@@ -26,6 +29,9 @@ export class AuthController {
         };
     }
 
+    @ApiOperation({
+        description: 'Verifies the user account. After successful verification, the user can log in to the system.',
+    })
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({
         type: VerifyResponse,
@@ -40,6 +46,9 @@ export class AuthController {
         };
     }
 
+    @ApiOperation({
+        description: 'Logs the user into the system. After successful login, a pair of tokens is returned. The access token is used to access the system, and the refresh token is used to get a new pair of tokens.',
+    })
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({
         type: LoginResponse,
@@ -54,6 +63,9 @@ export class AuthController {
         };
     }
 
+    @ApiOperation({
+        description: 'Refreshes the pair of tokens. After successful refresh, a new pair of tokens is returned. The access token is used to access the system, and the refresh token is used to get a new pair of tokens. Requires refresh token in header.',
+    })
     @UseGuards(RefreshTokenGuard)
     @ApiOkResponse({
         type: RefreshResponse,
