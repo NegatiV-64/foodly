@@ -12,6 +12,7 @@ import type { LoginUserDto } from './dto/login-user.dto';
 import type { AccessTokenPayload } from './interfaces/access-token.interface';
 import type { RefreshTokenDecoded, RefreshTokenPayload } from './interfaces/refresh-token.interface';
 import { verify } from 'argon2';
+import { generateRandomCode } from 'src/shared/utils/generateRandomCode';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +26,7 @@ export class AuthService {
     public async registerCustomer(dto: RegisterCustomerDTO) {
         const { email, password, phone } = dto;
 
-        const verifyCode = Math.floor(1000 + Math.random() * 9000);
+        const verifyCode = generateRandomCode();
         const verifyCodeExpiry = dayjs().add(5, 'minute').format('MMM DD, HH:mm');
         const VERIFY_SECRET_KEY = this.configService.get('VERIFY_SECRET_KEY') as string;
         const verifyCodePayload: VerificationTokenPayload = {

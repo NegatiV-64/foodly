@@ -94,4 +94,73 @@ export class UserService {
 
         return foundUser;
     }
+
+    public async getUserDetails(userId: number) {
+        const foundUser = await this.prisma.user.findUnique({
+            where: {
+                user_id: userId,
+            },
+            select: {
+                delivery: {
+                    skip: 0,
+                    take: 5,
+                },
+                feedback: {
+                    skip: 0,
+                    take: 5,
+                },
+                order: {
+                    skip: 0,
+                    take: 5,
+                },
+                payment: {
+                    skip: 0,
+                    take: 5,
+                },
+                user_address: true,
+                user_confirm_code: false,
+                user_email: true,
+                user_firstname: true,
+                user_id: true,
+                user_is_verified: true,
+                user_lastname: true,
+                user_password: false,
+                user_phone: true,
+                user_refresh_token: false,
+                user_type: true,
+            }
+            // include: {
+            //     delivery: {
+            //         skip: 0,
+            //         take: 5,
+            //     },
+            //     feedback: {
+            //         skip: 0,
+            //         take: 5,
+            //     },
+            //     order: {
+            //         skip: 0,
+            //         take: 5,
+            //     },
+            //     payment: {
+            //         skip: 0,
+            //         take: 5,
+            //     },
+            // }
+        });
+
+        if (foundUser === null) {
+            throw new NotFoundException(USER_ERRORS.NOT_FOUND('id'));
+        }
+
+        return foundUser;
+    }
+
+    public async deleteUser(userId: number) {
+        await this.prisma.user.delete({
+            where: {
+                user_id: userId,
+            }
+        });
+    }
 }
