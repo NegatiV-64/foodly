@@ -14,7 +14,8 @@
     "studio": "prisma studio --port 5555 --browser none"
   },
   "prisma": {
-    "schema": "src/prisma/schema.prisma"
+    "schema": "src/prisma/schema.prisma",
+    "seed": "ts-node src/prisma/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
