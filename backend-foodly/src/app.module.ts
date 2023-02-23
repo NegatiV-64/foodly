@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { AccountModule } from './account/account.module';
+import { EmployeeModule } from './employee/employee.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AccountModule } from './account/account.module';
     AuthModule,
     EmailModule,
     AccountModule,
+    EmployeeModule,
   ],
   controllers: [],
   providers: [],

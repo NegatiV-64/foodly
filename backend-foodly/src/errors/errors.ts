@@ -10,6 +10,7 @@ export const USER_ERRORS = {
     },
     WRONG_PASSWORD: 'Given password is incorrect',
     NOT_VERIFIED: 'User is not verified',
+    FORBIDDEN: 'User is not allowed to perform this action',
 } as const;
 
 export const AUTH_ERRORS = {
