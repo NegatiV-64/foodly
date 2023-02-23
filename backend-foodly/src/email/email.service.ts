@@ -14,12 +14,12 @@ export class EmailService {
             await mailTransport.sendMail({
                 from: `Foodly Bot <${emailSender}>`,
                 to: `${emailTo}`,
-                subject: 'Verify your registration',
+                subject: 'Verify your account',
                 html: `
                 <div>
                     <h2>Hello!</h2>
-                    <p>Please, verify your order with with following code: <code>${verficationCode}<code/></p>
-                    <p>Verify your order within 5 minutes, unless it would expire</p>
+                    <p>Please, verify your account with with following code: <code>${verficationCode}<code/></p>
+                    <p>Verify your account within 5 minutes, unless it would expire</p>
                     <p>You can use this code until: ${expiryDate}</p>
                 </div>
                 `
