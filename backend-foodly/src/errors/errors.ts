@@ -28,3 +28,15 @@ export const ACCOUNT_ERRORS = {
     ACCOUNT_ERROR_WRONG_PASSWORD: 'Given password is incorrect',
     ACCOUNT_ERROR_SAME_PASSWORDS: 'New and old passwords are the same'
 } as const;
+
+export const CATEGORY_ERRORS = {
+    NOT_FOUND(context?: string) {
+        let errorMessage = 'Given category was not found';
+
+        if (context) {
+            errorMessage = `${errorMessage}. Reason: Category with matching ${context} was not found`;
+        }
+
+        return errorMessage;
+    }
+} as const;
