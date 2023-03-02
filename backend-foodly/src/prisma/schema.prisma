@@ -38,7 +38,7 @@ model Product {
   product_name        String
   product_image       String
   product_description String
-  product_price       String
+  product_price       Decimal
   category            Category         @relation(fields: [product_category_id], references: [category_id])
   product_category_id Int
   orders              ProductsOrders[]
