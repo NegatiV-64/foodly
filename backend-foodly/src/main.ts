@@ -2,10 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
-import { validatorConfig } from './config/validation.config';
+import { validatorConfig } from './shared/config/validation.config';
 import { SwaggerModule } from '@nestjs/swagger';
-import { swaggerConfig } from './config/swagger.config';
-import { corsOptions } from './config/cors.config';
+import { swaggerConfig } from './shared/config/swagger.config';
+import { corsOptions } from './shared/config/cors.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

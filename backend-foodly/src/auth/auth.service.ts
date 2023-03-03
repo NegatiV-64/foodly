@@ -6,7 +6,7 @@ import * as dayjs from 'dayjs';
 import { UserService } from 'src/user/user.service';
 import { EmailService } from 'src/email/email.service';
 import type { VerifyUserDto } from './dto/verify-user.dto';
-import { AUTH_ERRORS } from 'src/errors/errors';
+import { AUTH_ERRORS } from 'src/shared/errors/errors';
 import type { VerificationTokenDecoded, VerificationTokenPayload } from './interfaces/verification-token.interface';
 import type { LoginUserDto } from './dto/login-user.dto';
 import type { AccessTokenPayload } from './interfaces/access-token.interface';

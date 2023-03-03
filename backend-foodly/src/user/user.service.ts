@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/commo
 import { PrismaService } from 'src/prisma/prisma.service';
 import type { CreateUserDto } from './dto/create-user.dto';
 import { hash, verify } from 'argon2';
-import { USER_ERRORS } from 'src/errors/errors';
+import { USER_ERRORS } from 'src/shared/errors/errors';
 import type { ValidateUser } from './dto/validate-user.dto';
 
 @Injectable()

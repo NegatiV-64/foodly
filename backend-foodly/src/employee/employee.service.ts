@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { hash } from 'argon2';
-import { USER_ERRORS } from 'src/errors/errors';
+import { USER_ERRORS } from 'src/shared/errors/errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import type { CreateEmployeeDto } from './dto/create-employee.dto';
 import type { EmployeesQuery } from './interfaces/employeesQuery.interface';

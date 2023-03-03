@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EmployeeService } from 'src/employee/employee.service';
-import { CATEGORY_ERRORS } from 'src/errors/errors';
+import { CATEGORY_ERRORS } from 'src/shared/errors/errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { slugify } from 'src/shared/utils/slugify.util';
 import type { CreateCategoryDto } from './dto/create-category.dto';

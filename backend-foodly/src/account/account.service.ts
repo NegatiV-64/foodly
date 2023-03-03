@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { hash, verify } from 'argon2';
-import { ACCOUNT_ERRORS } from 'src/errors/errors';
+import { ACCOUNT_ERRORS } from 'src/shared/errors/errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { excludeProperties } from 'src/shared/utils/excludeProperties.util';
 import { UserService } from 'src/user/user.service';

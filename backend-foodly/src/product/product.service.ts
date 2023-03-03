@@ -3,7 +3,7 @@ import { unlink } from 'fs/promises';
 import { join } from 'path';
 import { cwd } from 'process';
 import { EmployeeService } from 'src/employee/employee.service';
-import { CATEGORY_ERRORS, PRODUCT_ERRORS } from 'src/errors/errors';
+import { CATEGORY_ERRORS, PRODUCT_ERRORS } from 'src/shared/errors/errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import type { CreateProductDto } from './dto/create-product.dto';
 import type { UpdateProductDto } from './dto/update-product.dto';
