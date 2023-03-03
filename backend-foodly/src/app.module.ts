@@ -7,9 +7,17 @@ import { EmailModule } from './email/email.module';
 import { AccountModule } from './account/account.module';
 import { EmployeeModule } from './employee/employee.module';
 import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { cwd } from 'process';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(cwd(), 'upload'),
+      serveRoot: '/upload'
+    }),
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     UserModule,
@@ -18,6 +26,7 @@ import { CategoryModule } from './category/category.module';
     AccountModule,
     EmployeeModule,
     CategoryModule,
+    ProductModule,
   ],
   controllers: [],
   providers: [],

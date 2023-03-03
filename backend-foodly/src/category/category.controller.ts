@@ -95,6 +95,25 @@ export class CategoryController {
         return category;
     }
 
+    @Get('/:category_slug/products')
+    @ApiOperation({
+        description: 'Gets all products from a category with data about the category. Access token is not required. The route is public. You can use the query parameters to paginate the products. Sort is only available by product id. Example: /categories/pizza/products?take=10&skip=0&order=id:asc',
+    })
+    public async getCategoryWithProducts(
+        @Param('category_slug') categorySlug: string,
+        @Query('take') take?: number,
+        @Query('skip') skip?: number,
+        @Query('order', ValidateOrderByQueryPipe) order?: OrderByQuery,
+    ) {
+        const category = await this.categoryService.getCategoryWithProducts('category_slug', categorySlug, {
+            order,
+            skip,
+            take,
+        });
+
+        return category;
+    }
+
     @Delete('/:category_id')
     @ApiOperation({
         description: 'Deletes a category. Only admins and managers can delete categories. Access token is required.',

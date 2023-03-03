@@ -6,6 +6,7 @@ import { slugify } from 'src/shared/utils/slugify.util';
 import type { CreateCategoryDto } from './dto/create-category.dto';
 import type { UpdateCategoryDto } from './dto/update-category.dto';
 import type { GetCategoriesQueries } from './interfaces/GetCategoriesQueries.interface';
+import type { GetCategoriesWithProductsQueryParams } from './interfaces/GetCategoriesWithProductsQueryParams.interface';
 
 @Injectable()
 export class CategoryService {
@@ -50,6 +51,31 @@ export class CategoryService {
         const category = await this.prisma.category.findUnique({
             where: {
                 [searchType]: searchValue,
+            },
+        });
+
+        if (!category) {
+            throw new NotFoundException(CATEGORY_ERRORS.NOT_FOUND(searchType));
+        }
+
+        return category;
+    }
+
+    public async getCategoryWithProducts(searchType: 'category_id' | 'category_slug', searchValue: number | string, {
+        order = 'asc', skip, take
+    }: GetCategoriesWithProductsQueryParams) {
+        const category = await this.prisma.category.findUnique({
+            where: {
+                [searchType]: searchValue,
+            },
+            include: {
+                products: {
+                    skip: skip,
+                    take: take,
+                    orderBy: {
+                        product_id: order,
+                    }
+                },
             },
         });
 

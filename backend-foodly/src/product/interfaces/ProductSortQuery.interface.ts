@@ -1,0 +1,2 @@
+export type ProductSortQuery = 'product_id' | 'product_name' | 'product_price' | 'category_name' | 'category_id';
+export const productSortQuery: ProductSortQuery[] = ['product_id', 'product_name', 'product_price', 'category_name', 'category_id'];
