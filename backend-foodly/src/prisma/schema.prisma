@@ -62,10 +62,10 @@ model Order {
   products          ProductsOrders[]
   user              User             @relation(fields: [order_user_id], references: [user_id])
   order_user_id     Int
-  payment           Payment          @relation(fields: [order_payment_id], references: [payment_id])
-  order_payment_id  String           @unique
-  delivery          Delivery         @relation(fields: [order_delivery_id], references: [delivery_id])
-  order_delivery_id String           @unique
+  payment           Payment?         @relation(fields: [order_payment_id], references: [payment_id])
+  order_payment_id  String?          @unique
+  delivery          Delivery?        @relation(fields: [order_delivery_id], references: [delivery_id])
+  order_delivery_id String?          @unique
 }
 
 model Payment {

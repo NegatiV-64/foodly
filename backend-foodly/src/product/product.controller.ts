@@ -14,7 +14,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import type { GetProductsQueryParams } from './interfaces/GetProductsQueryParams.interface';
 import { ProductSortQuery } from './interfaces/ProductSortQuery.interface';
 import { ValidateImage } from './pipes/ValidateImage.pipe';
-import { ValidateSortQueryPipe } from './pipes/ValidateSortQuery.pipe';
+import { ValidateProductSortQueryPipe } from './pipes/ValidateSortQuery.pipe';
 import { ProductService } from './product.service';
 import { CreateProductResponse } from './responses/createProduct.response';
 import { GetProductResponse } from './responses/GetProduct.response';
@@ -62,7 +62,7 @@ export class ProductController {
         @Query('skip', ParseOptionalIntPipe) skip?: number,
         @Query('category') categorySlug?: string,
         @Query('search') search?: string,
-        @Query('sort', ValidateSortQueryPipe) sort?: ProductSortQuery,
+        @Query('sort', ValidateProductSortQueryPipe) sort?: ProductSortQuery,
         @Query('order', ValidateOrderByQueryPipe) order?: OrderByQuery,
     ) {
         const getProductsQueryParams: GetProductsQueryParams = { take, skip, categorySlug, search, sort, order, };

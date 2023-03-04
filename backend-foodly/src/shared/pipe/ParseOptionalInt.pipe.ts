@@ -1,11 +1,9 @@
-// Write a pipe to parse int value from string and if it's not a number, return undefined
 import type { PipeTransform } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
-// Path: src/shared/pipe/ParseOptionalInt.pipe.ts
-
+@Injectable()
 export class ParseOptionalIntPipe implements PipeTransform {
     public transform(value: string): number | undefined {
-        // If it is not a number, return undefined
         if (!this.isNumeric(value)) {
             return undefined;
         }

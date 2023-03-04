@@ -4,7 +4,7 @@ import type { ProductSortQuery} from '../interfaces/ProductSortQuery.interface';
 import { productSortQuery } from '../interfaces/ProductSortQuery.interface';
 
 @Injectable()
-export class ValidateSortQueryPipe implements PipeTransform {
+export class ValidateProductSortQueryPipe implements PipeTransform {
     public transform(value: string): undefined | ProductSortQuery {
         if (productSortQuery.includes(value as ProductSortQuery)) {
             return value as ProductSortQuery;

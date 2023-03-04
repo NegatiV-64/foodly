@@ -11,6 +11,7 @@ import { ProductModule } from './product/product.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { cwd } from 'process';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { cwd } from 'process';
     EmployeeModule,
     CategoryModule,
     ProductModule,
+    OrderModule,
   ],
   controllers: [],
   providers: [],
