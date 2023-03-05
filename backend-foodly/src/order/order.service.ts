@@ -1,5 +1,5 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
-import type { Order, Product } from '@prisma/client';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import type { Prisma, Order, OrderStatus, Product } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import type { OrderItem } from './dto/create-order.dto';
 import type { GetOrdersQueryParams } from './interfaces/GetOrdersQueryParams.interface';
@@ -75,7 +75,7 @@ export class OrderService {
             }
         });
         if (user === null) {
-            throw new BadRequestException('User does not exist.');
+            throw new NotFoundException('User does not exist.');
         }
 
         const isUserEmployee = user.user_type === 'ADMIN' || user.user_type === 'MANAGER' || user.user_type === 'DELIVERY_BOY';
@@ -236,7 +236,7 @@ export class OrderService {
         });
 
         if (order === null) {
-            throw new BadRequestException('Order does not exist.');
+            throw new NotFoundException('Order does not exist.');
         }
 
         if (userId !== order.order_user_id) {
@@ -250,7 +250,7 @@ export class OrderService {
             });
 
             if (userToValidate === null) {
-                throw new BadRequestException('User does not exist.');
+                throw new NotFoundException('User does not exist.');
             }
 
             if (userToValidate.user_type === 'CUSTOMER') {
@@ -265,9 +265,167 @@ export class OrderService {
 
         return formattedOrder;
     }
+
+    public async deleteOrder(userId: number, orderId: string) {
+        const isUserEmployee = await this.isUserEmployee(userId);
+
+        const orderWhereQuery: Prisma.OrderWhereInput = {
+            order_id: orderId,
+            user: {
+                user_id: isUserEmployee === true ? undefined : userId,
+            }
+        };
+
+        await this.validateOrder('first', orderWhereQuery);
+
+        await this.prisma.order.delete({
+            where: {
+                order_id: orderId,
+            }
+        });
+    }
+
+    public async updateOrderStatus(userId: number, orderId: string, status: OrderStatus) {
+        // Checking user
+        const isUserEmployee = await this.isUserEmployee(userId);
+
+        if (isUserEmployee === false) {
+            const order = await this.prisma.order.findUnique({
+                where: {
+                    order_id: orderId,
+                },
+            });
+
+            if (order === null) {
+                throw new NotFoundException('Order does not exist.');
+            }
+
+            const updatedOrder = await this.prisma.order.update({
+                where: {
+                    order_id: orderId,
+                },
+                data: {
+                    order_status: status,
+                }
+            });
+
+            return updatedOrder;
+        }
+
+        const updatedOrder = await this.prisma.order.update({
+            where: {
+                order_id: orderId,
+            },
+            data: {
+                order_status: status,
+            },
+            include: {
+                products: {
+                    select: {
+                        product: {
+                            select: {
+                                product_id: true,
+                                product_name: true,
+                                product_price: true,
+                                product_description: true,
+                                product_image: true,
+                            }
+                        }
+                    }
+                },
+                user: {
+                    select: {
+                        user_id: true,
+                        user_firstname: true,
+                        user_lastname: true,
+                        user_email: true,
+                        user_phone: true,
+                        user_address: true,
+                        user_type: true,
+                    }
+                },
+                delivery: {
+                    select: {
+                        delivery_id: true,
+                        delivery_address: true,
+                        delivery_status: true,
+                        delivery_date: true,
+                        delivery_price: true,
+                        delivery_user: true,
+                    }
+                },
+                payment: {
+                    select: {
+                        payment_id: true,
+                        payment_date: true,
+                        payment_type: true,
+                    }
+                }
+            }
+        });
+
+        return {
+            ...updatedOrder,
+            products: updatedOrder.products.map(product => product.product),
+        };
+    }
+
+    private async isUserEmployee(userId: number) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                user_id: userId,
+            },
+        });
+
+        if (user === null) {
+            throw new NotFoundException('User does not exist.');
+        }
+
+        const isUserEmployee = user.user_type === 'ADMIN' || user.user_type === 'DELIVERY_BOY' || user.user_type === 'MANAGER';
+
+        return isUserEmployee;
+    }
+
+    private async validateOrder(findType: 'unique', findQuery: Prisma.OrderWhereUniqueInput): Promise<Order>;
+    private async validateOrder(findType: 'first', findQuery: Prisma.OrderWhereInput): Promise<Order>;
+    private async validateOrder(findType: 'unique' | 'first', findQuery: Prisma.OrderWhereInput | Prisma.OrderWhereUniqueInput,) {
+        let order: Order | null = null;
+
+        if (findType === 'unique') {
+            const foundOrder = await this.prisma.order.findUnique({
+                where: findQuery as Prisma.OrderWhereUniqueInput,
+            });
+
+            if (foundOrder === null) {
+                throw new NotFoundException('Order does not exist.');
+            }
+
+            order = foundOrder;
+        }
+
+        if (findType === 'first') {
+            const foundOrder = await this.prisma.order.findFirst({
+                where: findQuery,
+            });
+
+            if (foundOrder === null) {
+                throw new NotFoundException('Order does not exist.');
+            }
+
+            order = foundOrder;
+        }
+
+        if (order === null) {
+            throw new NotFoundException('Order does not exist.');
+        }
+
+        return order;
+    }
+
 }
 
 type GetOrdersReturnType = {
     orders: Order[];
     total: number;
 };
+

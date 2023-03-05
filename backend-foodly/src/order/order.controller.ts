@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/shared/decorators';
 import { AccessTokenGuard } from 'src/shared/guards';
@@ -7,6 +7,7 @@ import { ParseDatePipe } from 'src/shared/pipe/ParseDate.pipe';
 import { ParseOptionalIntPipe } from 'src/shared/pipe/ParseOptionalInt.pipe';
 import { ValidateOrderByQueryPipe } from 'src/shared/pipe/ValidateOrderByQuery.pipe';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import type { GetOrdersQueryParams } from './interfaces/GetOrdersQueryParams.interface';
 import { OrderSort } from './interfaces/OrderSort.interface';
 import { OrderService } from './order.service';
@@ -85,4 +86,39 @@ export class OrderController {
         return order;
     }
 
+    @Delete(':order_id')
+    @ApiOperation({
+        description: 'Deletes an order. Access token is required. Only admins, managers and delivery boys can delete order of other users. Customers can only delete their own orders.'
+    })
+    @ApiOkResponse({
+        description: 'Order deleted successfully',
+    })
+    @UseGuards(AccessTokenGuard)
+    public async deleteOrder(
+        @GetCurrentUser('user_id') userId: number,
+        @Param('order_id') orderId: string,
+    ) {
+        const order = await this.orderService.deleteOrder(userId, orderId);
+
+        return order;
+    }
+
+    @Put(':order_id/status')
+    @ApiOperation({
+        description: 'Updates the order status. Access token is required. Only admins, managers and delivery boys can update order of other users. Customers can only update their own orders.'
+    })
+    @ApiOkResponse({
+        description: 'Order status updated successfully',
+        type: UpdateOrderStatusDto,
+    })
+    @UseGuards(AccessTokenGuard)
+    public async updateOrderStatus(
+        @GetCurrentUser('user_id') userId: number,
+        @Param('order_id') orderId: string,
+        @Body() { status }: UpdateOrderStatusDto,
+    ) {
+        const order = await this.orderService.updateOrderStatus(userId, orderId, status);
+
+        return order;
+    }
 }
