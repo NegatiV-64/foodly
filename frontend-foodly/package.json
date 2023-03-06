@@ -7,10 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "npx eslint src --ext .ts,.tsx",
-    "lint:fix": "npx eslint src --ext .ts,.tsx --fix"
+    "lint:fix": "npx eslint src --ext .ts,.tsx --fix",
+    "server": "cd .. && cd backend-foodly && npm run dev"
   },
   "dependencies": {
     "clsx": "^1.2.1",
+    "cookies-next": "^2.1.1",
     "next": "13.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",

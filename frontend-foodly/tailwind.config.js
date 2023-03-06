@@ -4,7 +4,11 @@ module.exports = {
     './src/**/*.tsx',
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        'spin-slow': 'spin 4s linear infinite',
+      }
+    },
   },
   plugins: [
     require('tailwindcss-animate')
