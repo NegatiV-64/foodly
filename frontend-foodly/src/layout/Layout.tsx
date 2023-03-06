@@ -1,14 +1,17 @@
 import type { FC, ReactNode } from 'react';
+import { Fragment } from 'react';
 import { Header } from '@/layout/Header';
 import { Footer } from './Footer';
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
     return (
-        <main>
+        <Fragment>
             <Header />
-            {children}
+            <main className='bg-gray-50'>
+                {children}
+            </main>
             <Footer />
-        </main>
+        </Fragment>
     );
 };
 
