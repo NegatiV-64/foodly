@@ -38,7 +38,8 @@ export const CATEGORY_ERRORS = {
         }
 
         return errorMessage;
-    }
+    },
+    ALREADY_EXISTS: 'Category with given name already exists',
 } as const;
 
 export const PRODUCT_ERRORS = {
