@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { EmployeeService } from 'src/employee/employee.service';
 import { CATEGORY_ERRORS } from 'src/shared/errors/errors';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -18,16 +18,30 @@ export class CategoryService {
     public async createCategory(userId: number, { category_icon, category_name }: CreateCategoryDto) {
         await this.employeeService.checkEmployeeType(userId, 'ADMIN', 'MANAGER');
 
-        const category = await this.prisma.category.create({
-            data: {
-                category_icon: category_icon,
-                category_name: category_name,
-                category_slug: slugify(category_name),
-            }
-        });
+        try {
+            const category = await this.prisma.category.create({
+                data: {
+                    category_icon: category_icon,
+                    category_name: category_name,
+                    category_slug: slugify(category_name),
+                }
+            });
 
-        return category;
+            return category;
+        }
+
+        catch (error: any) {
+            // Prisma has bug with error handling, so we need to check error manually. More info: https://github.com/prisma/prisma/issues/12128
+            if (error?.constructor?.name === 'PrismaClientKnownRequestError') {
+                if (error?.code && error?.code === 'P2002') {
+                    throw new BadRequestException(CATEGORY_ERRORS.ALREADY_EXISTS);
+                }
+            }
+
+            throw new Error(error.message);
+        }
     }
+
 
     public async getCategories({ order = 'asc', skip, take }: GetCategoriesQueries) {
         const [categoriesAmount, categories] = await this.prisma.$transaction([
