@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'argon2';
+import { slugify } from '../shared/utils/slugify.util';
 const prisma = new PrismaClient();
 
 async function main() {
@@ -7,6 +8,7 @@ async function main() {
     await addManagerUser();
     await addDeliveryUser();
     await addCustomerUser();
+    await addCategories();
 }
 
 main()
@@ -107,5 +109,50 @@ async function addCustomerUser() {
             user_is_verified: true,
         },
         update: {}
+    });
+}
+
+async function addCategories() {
+    const categories = [
+        {
+            category_name: 'Pizza',
+            category_icon: '🍕'
+        },
+        {
+            category_name: 'Burger',
+            category_icon: '🍔'
+        },
+        {
+            category_name: 'Hot Dog',
+            category_icon: '🌭'
+        },
+        {
+            category_name: 'Sandwich',
+            category_icon: '🥪'
+        },
+        {
+            category_name: 'Salad',
+            category_icon: '🥗'
+        },
+        {
+            category_name: 'Drinks',
+            category_icon: '🥤',
+        },
+        {
+            category_name: 'Snacks',
+            category_icon: '🍟'
+        },
+        {
+            category_name: 'Longers',
+            category_icon: '🌯'
+        }
+    ];
+
+    await prisma.category.createMany({
+        data: categories.map((category) => ({
+            ...category,
+            category_slug: slugify(category.category_name)
+        })),
+        skipDuplicates: true
     });
 }
