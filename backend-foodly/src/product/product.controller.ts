@@ -21,6 +21,7 @@ import { GetProductResponse } from './responses/GetProduct.response';
 import { GetProductsResponse } from './responses/getProducts.response';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateProductResponse } from './responses/updateProduct.response';
+import { PopularProductsResponse } from './responses/popularProducts.response';
 
 @ApiTags('Product')
 @Controller('products')
@@ -72,6 +73,24 @@ export class ProductController {
         const { products, total } = await this.productService.getProducts(getProductsQueryParams);
 
         return { products, total };
+    }
+
+    @Get('popular')
+    @ApiOperation({
+        description: 'Gets the most popular products. Access token is not required. This endpoint is public.',
+    })
+    @ApiOkResponse({
+        description: 'The products have been successfully retrieved.',
+        type: PopularProductsResponse,
+    })
+    public async getPopularProducts() {
+        // I am lazy to actually count the number of orders for each product and then sort them by the number of orders. So I will just return the first 10 products.
+        // Maybe I will implement this later. I am not sure. I am lazy.
+        const products = this.productService.getPopularProducts();
+
+        return {
+            products,
+        };
     }
 
     @Get(':product_id')

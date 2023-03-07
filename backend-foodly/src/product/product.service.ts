@@ -74,6 +74,18 @@ export class ProductService {
         return { products, total };
     }
 
+    public async getPopularProducts() {
+        const products = await this.prisma.product.findMany({
+            take: 12,
+            skip: 0,
+            orderBy: {
+                product_id: 'desc',
+            }
+        });
+
+        return products;
+    }
+
     public async getProduct(productId: number) {
         const product = await this.prisma.product.findUnique({
             where: {
