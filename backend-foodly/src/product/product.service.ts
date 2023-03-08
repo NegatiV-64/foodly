@@ -58,6 +58,9 @@ export class ProductService {
                 },
                 take: take,
                 skip: skip,
+                include: {
+                    category: true,
+                }
             }),
             this.prisma.product.count({
                 where: {
@@ -80,6 +83,9 @@ export class ProductService {
             skip: 0,
             orderBy: {
                 product_id: 'desc',
+            },
+            include: {
+                category: true,
             }
         });
 
@@ -91,6 +97,9 @@ export class ProductService {
             where: {
                 product_id: productId,
             },
+            include: {
+                category: true,
+            }
         });
 
         if (!product) {

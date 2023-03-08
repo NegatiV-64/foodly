@@ -1,7 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+class Category {
+    @ApiProperty()
+    category_id: number;
+
+    @ApiProperty()
+    category_icon: string;
+
+    @ApiProperty()
+    category_name: string;
+
+    @ApiProperty()
+    category_slug: string;
+}
+
 export class GetProductResponse {
-    // Product prisma model with ApiProperty decorator
     @ApiProperty()
     product_id: number;
 
@@ -19,4 +32,7 @@ export class GetProductResponse {
 
     @ApiProperty()
     product_category_id: number;
+
+    @ApiProperty({ type: Category })
+    category: Category;
 }

@@ -1,5 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+class Category {
+    @ApiProperty()
+    category_id: number;
+
+    @ApiProperty()
+    category_icon: string;
+
+    @ApiProperty()
+    category_name: string;
+
+    @ApiProperty()
+    category_slug: string;
+}
+
 class Product {
     @ApiProperty()
     product_id: number;
@@ -18,9 +32,13 @@ class Product {
 
     @ApiProperty()
     product_category_id: number;
+
+    @ApiProperty({ type: () => Category })
+    category: Category;
 }
 
 export class PopularProductsResponse {
     @ApiProperty({ type: [Product]})
     products: Product[];
 }
+
