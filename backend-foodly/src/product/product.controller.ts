@@ -67,8 +67,6 @@ export class ProductController {
         @Query('order', ValidateOrderByQueryPipe) order?: OrderByQuery,
     ) {
         const getProductsQueryParams: GetProductsQueryParams = { take, skip, categorySlug, search, sort, order, };
-        console.log(take, typeof take);
-
 
         const { products, total } = await this.productService.getProducts(getProductsQueryParams);
 
@@ -86,7 +84,7 @@ export class ProductController {
     public async getPopularProducts() {
         // I am lazy to actually count the number of orders for each product and then sort them by the number of orders. So I will just return the first 10 products.
         // Maybe I will implement this later. I am not sure. I am lazy.
-        const products = this.productService.getPopularProducts();
+        const products = await this.productService.getPopularProducts();
 
         return {
             products,
