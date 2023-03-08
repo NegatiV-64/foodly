@@ -4,12 +4,12 @@ import { mkdirSync } from 'fs';
 import { diskStorage } from 'multer';
 
 export const createProductUploadConfig: MulterOptions = {
-    dest: './upload/products',
+    dest: './uploads/products',
     storage: diskStorage({
         destination: (_req, _file, cb) => {
-            const path = './upload/products';
+            const path = './uploads/products';
             mkdirSync(path, { recursive: true });
-            cb(null, './upload/products');
+            cb(null, path);
         },
         filename: (req, file, cb) => {
             const requestBody = req.body;

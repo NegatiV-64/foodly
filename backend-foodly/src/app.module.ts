@@ -16,8 +16,8 @@ import { OrderModule } from './order/order.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(cwd(), 'upload'),
-      serveRoot: '/upload'
+      rootPath: join(cwd(), 'uploads'),
+      serveRoot: '/uploads'
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
