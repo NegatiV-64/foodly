@@ -20,7 +20,7 @@ export const Navigation = () => {
                     links.map(({ href, label }) => (
                         <li key={href}>
                             <Link className={cn(
-                                'text-gray-500 text-lg font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2',
+                                'text-gray-500 text-xl font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2',
                                 {
                                     'text-gray-900': isActive(href),
                                 }

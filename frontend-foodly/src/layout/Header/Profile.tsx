@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/context/auth/auth.context';
 import { Fragment } from 'react';
 
@@ -17,12 +18,12 @@ export const Profile = () => {
                     )
                     : (
                         <div className='flex items-center justify-end gap-5'>
-                            <span>
+                            <Button className='text-stone-900' variant='text'>
                                 Sign In
-                            </span>
-                            <span>
+                            </Button>
+                            <Button>
                                 Sign Up
-                            </span>
+                            </Button>
                         </div>
                     )
             }
