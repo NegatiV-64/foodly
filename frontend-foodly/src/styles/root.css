@@ -1,0 +1,45 @@
+:root {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    flex-grow: 1;
+}
+
+#__next {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 100%;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+div.swiper-button-next.swiper-button-disabled,
+div.swiper-button-prev.swiper-button-disabled {
+    opacity: .5;
+}
+
+div.swiper-button-next,
+div.swiper-button-prev {
+    @apply text-orange-300 scale-50;
+}
+
+div.swiper-button-next {
+    @apply -right-1;
+}
+
+div.swiper-button-prev {
+    @apply -left-1;
+}
