@@ -7,14 +7,14 @@ import { SiReact } from 'react-icons/si';
 
 export const Footer = () => {
     return (
-        <footer className='mt-auto pt-5'>
+        <footer className='mt-auto border-t border-solid pt-5'>
             <Container>
                 <nav className='flex flex-wrap justify-center'>
                     <ul className='flex '>
                         {
                             links.map(({ href, label }) => (
-                                <li key={href} className={'px-5 py-2'}>
-                                    <Link href={href} className={cn('text-base text-gray-500 hover:text-gray-900 duration-200')}>
+                                <li key={href} className={'px-5 py-2 font-medium'}>
+                                    <Link href={href} className={cn('text-lg text-gray-500 hover:text-gray-900 duration-200')}>
                                         {label}
                                     </Link>
                                 </li>

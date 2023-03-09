@@ -18,10 +18,10 @@ export const Profile = () => {
                     )
                     : (
                         <div className='flex items-center justify-end gap-5'>
-                            <Button className='text-stone-900' variant='text'>
+                            <Button className='text-stone-900 hover:scale-95' variant='text'>
                                 Sign In
                             </Button>
-                            <Button>
+                            <Button className='hover:scale-95'>
                                 Sign Up
                             </Button>
                         </div>

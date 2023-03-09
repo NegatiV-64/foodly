@@ -16,7 +16,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 disabled={disabled === true || loading === true}
                 className={cn(
                     'rounded-md inline-flex items-center justify-center gap-1 touch-manipulation will-change-[background,_box-shadow] select-none h-min text-center no-underline transform-none border-none outline-none duration-200',
-                    'hover:scale-95',
                     'disabled:bg-neutral-400 disabled:hover:cursor-not-allowed',
                     {
                         'px-3 py-2 text-sm': size === 'small',
