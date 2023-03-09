@@ -12,7 +12,6 @@ export const Navigation = () => {
         return pathname.startsWith(href);
     };
 
-
     return (
         <nav className='flex justify-center'>
             <ul className='flex items-center gap-4'>
@@ -20,7 +19,7 @@ export const Navigation = () => {
                     links.map(({ href, label }) => (
                         <li key={href}>
                             <Link className={cn(
-                                'text-gray-500 text-xl hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2',
+                                'text-gray-500 text-xl hover:text-gray-900 focus:outline-none',
                                 {
                                     'text-gray-900': isActive(href),
                                 }
