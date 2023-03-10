@@ -10,15 +10,16 @@ import { Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { cn } from '@/utils/cn.util';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { RoutesConfig } from '@/config/routes.config';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
 import Image from 'next/image';
 import type { ProductList } from '@/interfaces/product.inteface';
 import { ProductCard } from '@/components/ui/ProductCard';
-import { HiOutlineClock, HiOutlineFire, HiOutlineMail, HiOutlinePhone, HiOutlineTruck } from 'react-icons/hi';
+import { HiArrowRight, HiOutlineClock, HiOutlineFire, HiOutlineMail, HiOutlinePhone, HiOutlineTruck } from 'react-icons/hi';
 import { Button } from '@/components/ui/Button';
+import { Link } from '@/components/ui/Link';
 
 const HomePage: NextPage<HomePageProps> = ({ categories, popularProducts }) => {
     const formStyles = {
@@ -54,7 +55,12 @@ const HomePage: NextPage<HomePageProps> = ({ categories, popularProducts }) => {
             </Section>
             <Section className='pt-7'>
                 <Container>
-                    <Heading size='3xl' className='mb-4'>Categories</Heading>
+                    <div className='mb-4 flex justify-between'>
+                        <Heading size='3xl' className=''>Categories</Heading>
+                        <Link className='shadow-none' startIcon={<HiArrowRight />} href={RoutesConfig.Categories}>
+                            View All
+                        </Link>
+                    </div>
                     <Swiper
                         className='flex h-full w-full justify-center'
                         slidesPerView={6}
@@ -73,7 +79,7 @@ const HomePage: NextPage<HomePageProps> = ({ categories, popularProducts }) => {
                                     )}
                                     key={category.category_id}
                                 >
-                                    <Link
+                                    <NextLink
                                         className={cn(
                                             '!flex flex-col gap-y-2 justify-center items-center',
                                             'bg-white shadow-sm rounded-xl',
@@ -84,7 +90,7 @@ const HomePage: NextPage<HomePageProps> = ({ categories, popularProducts }) => {
                                     >
                                         <span className='text-4xl'>{category.category_icon}</span>
                                         <Heading as={'h3'} size={'lg'} weight={'normal'} className=''>{category.category_name}</Heading>
-                                    </Link>
+                                    </NextLink>
                                 </SwiperSlide>
                             ))
                         }
