@@ -19,7 +19,7 @@ import type { ProductList } from '@/interfaces/product.inteface';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { HiArrowRight, HiOutlineClock, HiOutlineFire, HiOutlineMail, HiOutlinePhone, HiOutlineTruck } from 'react-icons/hi';
 import { Button } from '@/components/ui/Button';
-import { Link } from '@/components/ui/Link';
+import { Link } from '@/components/navigation/Link';
 
 const HomePage: NextPage<HomePageProps> = ({ categories, popularProducts }) => {
     const formStyles = {
