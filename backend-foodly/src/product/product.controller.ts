@@ -99,7 +99,7 @@ export class ProductController {
         description: 'The product has been successfully retrieved.',
         type: GetProductResponse,
     })
-    public async getProduct(@Param('product_id') productId: number) {
+    public async getProduct(@Param('product_id', ParseIntPipe) productId: number) {
         const product = await this.productService.getProduct(productId);
 
         return product;
