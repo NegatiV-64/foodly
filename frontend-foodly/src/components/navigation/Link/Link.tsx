@@ -7,7 +7,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
     const {
         href, children, className,
         size = 'medium', variant = 'contained', color = 'default',
-        startIcon, endIcon,
+        startIcon, endIcon, scroll = true,
         ...otherProps
     } = props;
 
@@ -38,6 +38,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
             )}
             href={href}
             {...otherProps}
+            scroll={scroll}
             ref={ref}
         >
             {

@@ -4,4 +4,5 @@ export const RoutesConfig = {
     Categories: '/categories',
     Category: (slug: string) => `/categories/${slug}`,
     Product: (slug: string | number) => `/products/${slug}`,
+    Checkout: '/checkout',
 } as const;

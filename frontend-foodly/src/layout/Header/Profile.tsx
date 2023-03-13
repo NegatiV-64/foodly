@@ -7,7 +7,6 @@ export const Profile = () => {
 
     return (
         <Fragment>
-
             {
                 status === 'logged' && user !== null
                     ? (

@@ -63,9 +63,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         // If there are no tokens, redirect to login page
         if (accessToken === undefined || refreshToken === undefined) {
             if (NODE_ENV === 'production') {
-                onLogout();
+                replace(RoutesConfig.Login);
             }
-            return;
+            return null;
         }
 
         // If access token is not present and if refresh token is present, then refresh access token
@@ -73,7 +73,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
             const { data, ok } = await authRefresh(refreshToken);
 
             if (ok === false || data === null) {
-                onLogout();
+                replace(RoutesConfig.Login);
                 return null;
             }
 
@@ -106,10 +106,12 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
         // If access token is present and if refresh token is not present, then redirect to login page
         if (accessToken !== undefined && refreshToken === undefined) {
-            onLogout();
+            replace(RoutesConfig.Login);
             return null;
         }
 
+        // If both access token and refresh token are present, then check if they are valid
+        // If they are valid, then set user data
         if (accessToken !== undefined && refreshToken !== undefined) {
             const accessTokenData = decodeJwt<AcccessTokenData>(accessToken);
             if (accessTokenData === null) {
