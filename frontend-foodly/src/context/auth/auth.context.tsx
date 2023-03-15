@@ -61,7 +61,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         const refreshToken = getCookie('refresh_token') as string | undefined;
 
         // If there are no tokens, redirect to login page
-        if (accessToken === undefined || refreshToken === undefined) {
+        if (accessToken === undefined && refreshToken === undefined) {
             if (NODE_ENV === 'production') {
                 replace(RoutesConfig.Login);
             }
@@ -77,20 +77,21 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
                 return null;
             }
 
-            const accessTokenData = decodeJwt<AcccessTokenData>(accessToken);
+            const accessTokenData = decodeJwt<AcccessTokenData>(data.access_token);
             if (accessTokenData === null) {
                 throw new Error('Invalid access token');
             }
-            const refreshTokenData = decodeJwt<RefreshTokenData>(refreshToken);
+
+            const refreshTokenData = decodeJwt<RefreshTokenData>(data.refresh_token);
             if (refreshTokenData === null) {
                 throw new Error('Invalid refresh token');
             }
 
             // Setting cookies to store tokens
-            setCookie('access_token', accessToken, {
+            setCookie('access_token', data.refresh_token, {
                 expires: new Date(accessTokenData.exp * 1000),
             });
-            setCookie('refresh_token', refreshToken, {
+            setCookie('refresh_token', data.refresh_token, {
                 expires: new Date(refreshTokenData.exp * 1000),
             });
 
