@@ -31,7 +31,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
                 {
                     'border': variant === 'contained',
                     'border bg-transparent': variant === 'outlined',
-                    'border border-transparent': variant === 'text',
+                    'border border-transparent bg-transparent shadow-none': variant === 'text',
                     'border border-transparent underline underline-offset-4': variant === 'underline',
                 },
                 className,
