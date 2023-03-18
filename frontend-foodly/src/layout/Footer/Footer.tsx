@@ -25,7 +25,7 @@ export const Footer = () => {
             </Container>
             <div className='mt-4 bg-slate-800 py-5'>
                 <Text size='lg' className={cn('flex items-center justify-center gap-1 text-white')}>
-                    {new Date().getFullYear()}. Made with <HiHeart className='text-2xl text-red-500' /> and <SiReact className='animate-spin-slow text-[#61DAFB]' /> by <a href='/'>Aziz Bektemirov</a>
+                    {new Date().getFullYear()}. Made with <HiHeart className='text-2xl text-red-500' /> and <SiReact className='animate-spin-slow text-[rgb(20,158,202)]' /> by <a href='/'>Aziz Bektemirov</a>
                 </Text>
             </div>
         </footer>
