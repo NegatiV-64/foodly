@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsEmail, IsPhoneNumber, MinLength, IsIn } from 'class-validator';
 import { IsNotEmptyString } from 'src/shared/decorators';
-import { employeeTypes, EmployeeType } from '../interfaces/employeeType.interface';
+import { employeeTypes, EmployeeType } from '../interfaces';
 
 export class CreateEmployeeDto {
     @ApiProperty()

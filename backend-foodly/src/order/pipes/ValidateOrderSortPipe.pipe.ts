@@ -1,7 +1,7 @@
 import type { PipeTransform} from '@nestjs/common';
 import { Injectable} from '@nestjs/common';
-import type { OrderSort} from '../interfaces/OrderSort.interface';
-import { orderSortValues } from '../interfaces/OrderSort.interface';
+import type { OrderSort } from '../interfaces';
+import { orderSortValues } from '../interfaces';
 
 @Injectable()
 export class ValidateOrderSortPipe implements PipeTransform {
