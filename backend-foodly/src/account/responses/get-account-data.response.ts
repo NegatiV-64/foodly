@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRole, DeliveryStatus, OrderStatus, PaymentType } from '@prisma/client';
 
-export class GetAccountDataResponse {
+export class GetAccountResponse {
     @ApiProperty({ nullable: true })
     user_address: string;
 
@@ -26,20 +26,20 @@ export class GetAccountDataResponse {
     @ApiProperty({ enum: UserRole })
     user_type: UserRole;
 
-    @ApiProperty({ type: () => [Delivery] })
-    delivery: Delivery[];
+    @ApiProperty({ type: () => [GetAccountDelivery] })
+    delivery: GetAccountDelivery[];
 
-    @ApiProperty({ type: () => [Feedback] })
-    feedback: Feedback[];
+    @ApiProperty({ type: () => [GetAccountFeedback] })
+    feedback: GetAccountFeedback[];
 
-    @ApiProperty({ type: () => [Order] })
-    order: Order[];
+    @ApiProperty({ type: () => [GetAccountOrder] })
+    order: GetAccountOrder[];
 
-    @ApiProperty({ type: () => [Payment] })
-    payment: Payment[];
+    @ApiProperty({ type: () => [GetAccountPayment] })
+    payment: GetAccountPayment[];
 }
 
-class Delivery {
+class GetAccountDelivery {
     @ApiProperty()
     delivery_id: string;
 
@@ -59,7 +59,7 @@ class Delivery {
     delivery_date: Date;
 }
 
-class Feedback {
+class GetAccountFeedback {
     @ApiProperty()
     feedback_id: string;
 
@@ -73,7 +73,7 @@ class Feedback {
     feedback_text: string;
 }
 
-class Order {
+class GetAccountOrder {
     @ApiProperty()
     order_id: string;
 
@@ -93,7 +93,7 @@ class Order {
     order_payment_id: string;
 }
 
-class Payment {
+class GetAccountPayment {
     @ApiProperty()
     payment_id: string;
 

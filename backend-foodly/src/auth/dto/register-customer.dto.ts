@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsPhoneNumber, IsString, MinLength } from 'class-validator';
 
-export class RegisterCustomerDTO {
+export class RegisterCustomerDto {
     @ApiProperty()
     @IsString()
     @IsEmail()

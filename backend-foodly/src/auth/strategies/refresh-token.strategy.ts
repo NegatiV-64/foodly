@@ -16,7 +16,7 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, tokenStateg
         });
     }
 
-    async validate(req: Request, { user_id, user_email }: RefreshTokenPayload) {
+    public async validate(req: Request, { user_id, user_email }: RefreshTokenPayload) {
         const refreshToken = req.get('authorization')?.replace('Bearer', '').trim();
         if (refreshToken === undefined) {
             throw new UnauthorizedException('Refresh token must be given');

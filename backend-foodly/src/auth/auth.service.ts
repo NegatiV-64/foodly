@@ -1,18 +1,18 @@
 import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { RegisterCustomerDTO } from './dto/register-customer.dto';
 import { JwtService } from '@nestjs/jwt';
-import * as dayjs from 'dayjs';
 import { UserService } from 'src/user/user.service';
 import { EmailService } from 'src/email/email.service';
 import type { VerifyUserDto } from './dto/verify-user.dto';
-import { AUTH_ERRORS } from 'src/shared/errors/errors';
+import { AUTH_ERRORS } from 'src/shared/errors';
 import type { VerificationTokenDecoded, VerificationTokenPayload } from './interfaces/verification-token.interface';
 import type { LoginUserDto } from './dto/login-user.dto';
 import type { AccessTokenPayload } from './interfaces/access-token.interface';
 import type { RefreshTokenDecoded, RefreshTokenPayload } from './interfaces/refresh-token.interface';
 import { verify } from 'argon2';
 import { generateRandomCode } from 'src/shared/utils/generateRandomCode';
+import { dayjs } from 'src/shared/libs/dayjs.lib';
+import type { RegisterCustomerDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +23,7 @@ export class AuthService {
         private emailService: EmailService,
     ) { }
 
-    public async registerCustomer(dto: RegisterCustomerDTO) {
+    public async registerCustomer(dto: RegisterCustomerDto) {
         const { email, password, phone } = dto;
 
         const verifyCode = generateRandomCode();

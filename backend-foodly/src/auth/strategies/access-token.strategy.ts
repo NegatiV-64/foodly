@@ -14,7 +14,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, tokenStategi
         });
     }
 
-    async validate({ user_email, user_fullname, user_id }: AccessTokenPayload) {
+    public async validate({ user_email, user_fullname, user_id }: AccessTokenPayload) {
         return { user_email, user_fullname, user_id };
     }
 }

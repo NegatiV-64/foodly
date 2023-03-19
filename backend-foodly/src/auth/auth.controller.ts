@@ -3,9 +3,7 @@ import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestj
 import { GetCurrentUser } from 'src/shared/decorators';
 import { RefreshTokenGuard } from 'src/shared/guards';
 import { AuthService } from './auth.service';
-import { LoginUserDto } from './dto/login-user.dto';
-import { RegisterCustomerDTO } from './dto/register-customer.dto';
-import { VerifyUserDto } from './dto/verify-user.dto';
+import { RegisterCustomerDto, VerifyUserDto, LoginUserDto } from './dto';
 import { LoginResponse, RefreshResponse, RegisterResponse, VerifyResponse } from './responses';
 
 @ApiTags('Auth')
@@ -21,7 +19,7 @@ export class AuthController {
         description: 'User was created, now waiting for verification'
     })
     @Post('/register')
-    public async registerCustomer(@Body() registerDto: RegisterCustomerDTO) {
+    public async registerCustomer(@Body() registerDto: RegisterCustomerDto) {
         await this.authService.registerCustomer(registerDto);
 
         return {

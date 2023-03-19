@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { hash, verify } from 'argon2';
-import { ACCOUNT_ERRORS } from 'src/shared/errors/errors';
+import { ACCOUNT_ERRORS } from 'src/shared/errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { excludeProperties } from 'src/shared/utils/excludeProperties.util';
 import { UserService } from 'src/user/user.service';
-import type { UpdateAccountDto } from './dto/update-account.dto';
+import type { UpdateAccountDto } from './dto';
 
 @Injectable()
 export class AccountService {

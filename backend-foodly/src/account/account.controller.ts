@@ -3,10 +3,8 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/shared/decorators';
 import { AccessTokenGuard } from 'src/shared/guards';
 import { AccountService } from './account.service';
-import { UpdateAccountDto } from './dto/update-account.dto';
-import { DeleteAccountResponse } from './responses/deleteAccount.response';
-import { GetAccountDataResponse } from './responses/getAccountData.response';
-import { UpdateAccountResponse } from './responses/updateAccountData.response';
+import { UpdateAccountDto } from './dto';
+import { GetAccountResponse, UpdateAccountResponse, DeleteAccountResponse } from './responses';
 
 @ApiTags('Account')
 @Controller('account')
@@ -17,7 +15,8 @@ export class AccountController {
         description: 'Endpoint to get account data. Returns the first 5 deliveries, orders and payments. Requires access token in header.',
     })
     @ApiOkResponse({
-        type: GetAccountDataResponse,
+        description: 'Returns the account data, first 5 deliveries, orders and payments.',
+        type: GetAccountResponse,
     })
     @UseGuards(AccessTokenGuard)
     @Get()
