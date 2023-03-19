@@ -2,13 +2,13 @@ import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOkResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/shared/decorators';
 import { AccessTokenGuard } from 'src/shared/guards';
-import { ValidateOrderByQueryPipe } from 'src/shared/pipe/ValidateOrderByQuery.pipe';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { ValidateOrderByQueryPipe } from 'src/shared/pipe';
+import { CreateEmployeeDto } from './dto';
 import { EmployeeService } from './employee.service';
-import type { EmployeesQuery } from './interfaces/employeesQuery.interface';
-import { EmployeeType } from './interfaces/employeeType.interface';
-import { CheckEmployeeSortBy } from './pipes/CheckEmployeeSortBy.pipe';
-import { CheckEmployeeTypeQueryPipe } from './pipes/CheckUserTypeQuery.pipe';
+import type { EmployeesQuery } from './interfaces';
+import { EmployeeType } from './interfaces';
+import { CheckEmployeeTypeQueryPipe, CheckEmployeeSortBy } from './pipes';
+import { GetEmployeesResponse } from './responses';
 
 @ApiTags('Employee')
 @Controller('employees')
@@ -38,6 +38,7 @@ export class EmployeeController {
 
     @ApiProperty({
         description: 'Get list of employees. Can be either paginated or not. Only admins and managers can view. Required access token',
+        type: GetEmployeesResponse
     })
     @UseGuards(AccessTokenGuard)
     @Get()
@@ -56,10 +57,11 @@ export class EmployeeController {
             sort: sort ?? 'user_id',
         };
 
-        const employees = await this.employeeService.getEmployees(queryParms);
+        const { employees, total } = await this.employeeService.getEmployees(queryParms);
 
         return {
             employees,
+            total,
         };
     }
 }

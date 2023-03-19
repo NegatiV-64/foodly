@@ -1,19 +1,16 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { hash } from 'argon2';
-import { USER_ERRORS } from 'src/shared/errors/errors';
 import { PrismaService } from 'src/prisma/prisma.service';
-import type { CreateEmployeeDto } from './dto/create-employee.dto';
-import type { EmployeesQuery } from './interfaces/employeesQuery.interface';
-import type { EmployeeType } from './interfaces/employeeType.interface';
-import { employeeTypes } from './interfaces/employeeType.interface';
+import { USER_ERRORS } from 'src/shared/errors';
+import type { CreateEmployeeDto } from './dto';
+import type { EmployeeType, EmployeesQuery } from './interfaces';
+import { employeeTypes } from './interfaces';
 
 @Injectable()
 export class EmployeeService {
     constructor(private prisma: PrismaService) { }
 
-    public async createEmployee(
-        { email, password, phone, first_name, last_name, type }: CreateEmployeeDto
-    ) {
+    public async createEmployee({ email, password, phone, first_name, last_name, type }: CreateEmployeeDto) {
         const hashedPassword = await hash(password);
 
         await this.prisma.user.create({
@@ -55,20 +52,42 @@ export class EmployeeService {
     }
 
     public async getEmployees({ skip, take, type, order, sort = 'user_id' }: EmployeesQuery) {
-        const employees = await this.prisma.user.findMany({
-            where: {
-                user_type: type,
-            },
-            include: {
-                _count: true,
-            },
-            skip: skip,
-            take: take,
-            orderBy: {
-                [sort]: order,
-            }
-        });
+        const [employees, total] = await this.prisma.$transaction([
+            this.prisma.user.findMany({
+                where: {
+                    user_type: type,
+                },
+                skip: skip,
+                take: take,
+                orderBy: {
+                    [sort]: order,
+                },
+                select: {
+                    user_address: true,
+                    user_email: true,
+                    user_firstname: true,
+                    user_id: true,
+                    user_is_verified: true,
+                    user_lastname: true,
+                    user_type: true,
+                    user_phone: true,
+                }
+            }),
+            this.prisma.user.count({
+                where: {
+                    user_type: type,
+                },
+                skip: skip,
+                take: take,
+                orderBy: {
+                    [sort]: order,
+                }
+            })
+        ]);
 
-        return employees;
+        return {
+            employees,
+            total,
+        };
     }
 }

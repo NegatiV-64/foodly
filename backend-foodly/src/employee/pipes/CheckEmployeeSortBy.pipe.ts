@@ -1,5 +1,5 @@
 import type { PipeTransform } from '@nestjs/common';
-import type { EmployeesQuery } from '../interfaces/employeesQuery.interface';
+import type { EmployeesQuery } from '../interfaces';
 
 export class CheckEmployeeSortBy implements PipeTransform {
     public transform(value: unknown): typeof availableSortBy[number] | undefined {

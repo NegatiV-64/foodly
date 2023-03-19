@@ -1,6 +1,6 @@
 import type { PipeTransform } from '@nestjs/common';
-import type { EmployeeType } from '../interfaces/employeeType.interface';
-import { employeeTypes } from '../interfaces/employeeType.interface';
+import type { EmployeeType } from '../interfaces';
+import { employeeTypes } from '../interfaces';
 
 export class CheckEmployeeTypeQueryPipe implements PipeTransform {
     public transform(value: any) {
