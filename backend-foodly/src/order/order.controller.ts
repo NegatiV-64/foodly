@@ -2,17 +2,14 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/shared/decorators';
 import { AccessTokenGuard } from 'src/shared/guards';
-import { OrderByQuery } from 'src/shared/interfaces/queries.interface';
-import { ParseDatePipe } from 'src/shared/pipe/ParseDate.pipe';
-import { ParseOptionalIntPipe } from 'src/shared/pipe/ParseOptionalInt.pipe';
-import { ValidateOrderByQueryPipe } from 'src/shared/pipe/ValidateOrderByQuery.pipe';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
-import type { GetOrdersQueryParams } from './interfaces/GetOrdersQueryParams.interface';
-import { OrderSort } from './interfaces/OrderSort.interface';
+import { OrderByQuery } from 'src/shared/interfaces';
+import { ParseOptionalIntPipe, ParseDatePipe, ValidateOrderByQueryPipe } from 'src/shared/pipe';
+import { CreateOrderDto, UpdateOrderStatusDto } from './dto';
+import type { GetOrdersQueryParams } from './interfaces';
+import { OrderSort } from './interfaces';
 import { OrderService } from './order.service';
 import { ValidateOrderSortPipe } from './pipes/ValidateOrderSortPipe.pipe';
-import { GetOrderResponse } from './responses/GetOrder.response';
+import { CreateOrderResponse, GetOrderResponse, UpdateOrderStatusResponse } from './responses';
 
 @ApiTags('Order')
 @Controller('orders')
@@ -25,6 +22,7 @@ export class OrderController {
     })
     @ApiCreatedResponse({
         description: 'Order created successfully',
+        type: CreateOrderResponse,
     })
     @UseGuards(AccessTokenGuard)
     public async createOrder(
@@ -109,7 +107,7 @@ export class OrderController {
     })
     @ApiOkResponse({
         description: 'Order status updated successfully',
-        type: UpdateOrderStatusDto,
+        type: UpdateOrderStatusResponse,
     })
     @UseGuards(AccessTokenGuard)
     public async updateOrderStatus(

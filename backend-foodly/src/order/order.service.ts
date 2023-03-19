@@ -1,17 +1,16 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import type { Prisma, Order, OrderStatus, Product } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import type { OrderItem } from './dto/create-order.dto';
-import type { GetOrdersQueryParams } from './interfaces/GetOrdersQueryParams.interface';
-import * as dayjs from 'dayjs';
-import * as customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
+import type { CreateOrderReturnType, GetOrderReturnType, GetOrdersQueryParams, UpdateOrderReturnType } from './interfaces';
+import { dayjs } from 'src/shared/libs/dayjs.lib';
+import type { OrderItem } from './dto';
+import { USER_ERRORS, ORDER_ERRORS } from 'src/shared/errors';
 
 @Injectable()
 export class OrderService {
     constructor(private prisma: PrismaService) { }
 
-    public async createOrder(userId: number, products: OrderItem[]) {
+    public async createOrder(userId: number, products: OrderItem[]): Promise<CreateOrderReturnType> {
         const foundProducts: Product[] = [];
 
         for (const product of products) {
@@ -75,12 +74,12 @@ export class OrderService {
             }
         });
         if (user === null) {
-            throw new NotFoundException('User does not exist.');
+            throw new NotFoundException(USER_ERRORS.NOT_FOUND());
         }
 
         const isUserEmployee = user.user_type === 'ADMIN' || user.user_type === 'MANAGER' || user.user_type === 'DELIVERY_BOY';
         if (isUserEmployee === false && userSearch !== undefined) {
-            throw new BadRequestException('Only employees can search for orders by user.');
+            throw new BadRequestException(ORDER_ERRORS.NOT_EMPLOYEE);
         }
 
         if (isUserEmployee === false) {
@@ -185,8 +184,8 @@ export class OrderService {
         };
     }
 
-    public async getOrder(userId: number, orderId: string) {
-        const order = await this.prisma.order.findUnique({
+    public async getOrder(userId: number, orderId: string): Promise<GetOrderReturnType> {
+        const dbOrder = await this.prisma.order.findUnique({
             where: {
                 order_id: orderId,
             },
@@ -217,12 +216,19 @@ export class OrderService {
                 },
                 delivery: {
                     select: {
-                        delivery_id: true,
                         delivery_address: true,
-                        delivery_status: true,
                         delivery_date: true,
+                        delivery_id: true,
+                        delivery_status: true,
                         delivery_price: true,
-                        delivery_user: true,
+                        delivery_user: {
+                            select: {
+                                user_id: true,
+                                user_firstname: true,
+                                user_lastname: true,
+                                user_phone: true,
+                            }
+                        }
                     }
                 },
                 payment: {
@@ -235,11 +241,14 @@ export class OrderService {
             }
         });
 
-        if (order === null) {
-            throw new NotFoundException('Order does not exist.');
+        // If order does not exist, throw an error
+        if (dbOrder === null) {
+            throw new NotFoundException(ORDER_ERRORS.NOT_FOUND());
         }
 
-        if (userId !== order.order_user_id) {
+        // If user is not an employee, check if he is the owner of the order.
+        // If not, throw an error
+        if (userId !== dbOrder.order_user_id) {
             const userToValidate = await this.prisma.user.findUnique({
                 where: {
                     user_id: userId,
@@ -250,23 +259,28 @@ export class OrderService {
             });
 
             if (userToValidate === null) {
-                throw new NotFoundException('User does not exist.');
+                throw new NotFoundException(USER_ERRORS.NOT_FOUND());
             }
 
             if (userToValidate.user_type === 'CUSTOMER') {
-                throw new ForbiddenException('You are not allowed to access this order.');
+                throw new ForbiddenException(ORDER_ERRORS.NOT_EMPLOYEE);
             }
         }
 
-        const formattedOrder = {
-            ...order,
-            products: order.products.map(product => product.product),
+        // Modify the order to match the GetOrder interface
+        const order: GetOrderReturnType = {
+            ...dbOrder,
+            delivery: dbOrder.delivery ? {
+                ...dbOrder.delivery,
+                delivery_boy: dbOrder.delivery.delivery_user,
+            } : null,
+            products: dbOrder.products.map(product => product.product),
         };
 
-        return formattedOrder;
+        return order;
     }
 
-    public async deleteOrder(userId: number, orderId: string) {
+    public async deleteOrder(userId: number, orderId: string): Promise<void> {
         const isUserEmployee = await this.isUserEmployee(userId);
 
         const orderWhereQuery: Prisma.OrderWhereInput = {
@@ -285,8 +299,7 @@ export class OrderService {
         });
     }
 
-    public async updateOrderStatus(userId: number, orderId: string, status: OrderStatus) {
-        // Checking user
+    public async updateOrderStatus(userId: number, orderId: string, status: OrderStatus): Promise<UpdateOrderReturnType> {
         const isUserEmployee = await this.isUserEmployee(userId);
 
         if (isUserEmployee === false) {
@@ -297,22 +310,81 @@ export class OrderService {
             });
 
             if (order === null) {
-                throw new NotFoundException('Order does not exist.');
+                throw new NotFoundException(ORDER_ERRORS.NOT_FOUND());
             }
 
-            const updatedOrder = await this.prisma.order.update({
+            const dbUpdatedOrder = await this.prisma.order.update({
                 where: {
                     order_id: orderId,
                 },
                 data: {
                     order_status: status,
+                },
+                include: {
+                    products: {
+                        select: {
+                            product: {
+                                select: {
+                                    product_id: true,
+                                    product_name: true,
+                                    product_price: true,
+                                    product_description: true,
+                                    product_image: true,
+                                }
+                            }
+                        }
+                    },
+                    user: {
+                        select: {
+                            user_id: true,
+                            user_firstname: true,
+                            user_lastname: true,
+                            user_email: true,
+                            user_phone: true,
+                            user_address: true,
+                            user_type: true,
+                        }
+                    },
+                    delivery: {
+                        select: {
+                            delivery_id: true,
+                            delivery_address: true,
+                            delivery_status: true,
+                            delivery_date: true,
+                            delivery_price: true,
+                            delivery_user: {
+                                select: {
+                                    user_id: true,
+                                    user_firstname: true,
+                                    user_lastname: true,
+                                    user_phone: true,
+                                }
+                            },
+                        }
+                    },
+                    payment: {
+                        select: {
+                            payment_id: true,
+                            payment_date: true,
+                            payment_type: true,
+                        }
+                    }
                 }
             });
+
+            const updatedOrder: UpdateOrderReturnType = {
+                ...dbUpdatedOrder,
+                delivery: dbUpdatedOrder.delivery ? {
+                    ...dbUpdatedOrder.delivery,
+                    delivery_boy: dbUpdatedOrder.delivery.delivery_user,
+                } : null,
+                products: dbUpdatedOrder.products.map(product => product.product),
+            };
 
             return updatedOrder;
         }
 
-        const updatedOrder = await this.prisma.order.update({
+        const dbUpdatedOrder = await this.prisma.order.update({
             where: {
                 order_id: orderId,
             },
@@ -351,7 +423,14 @@ export class OrderService {
                         delivery_status: true,
                         delivery_date: true,
                         delivery_price: true,
-                        delivery_user: true,
+                        delivery_user: {
+                            select: {
+                                user_id: true,
+                                user_firstname: true,
+                                user_lastname: true,
+                                user_phone: true,
+                            }
+                        },
                     }
                 },
                 payment: {
@@ -364,10 +443,16 @@ export class OrderService {
             }
         });
 
-        return {
-            ...updatedOrder,
-            products: updatedOrder.products.map(product => product.product),
+        const updatedOrder: UpdateOrderReturnType = {
+            ...dbUpdatedOrder,
+            delivery: dbUpdatedOrder.delivery ? {
+                ...dbUpdatedOrder.delivery,
+                delivery_boy: dbUpdatedOrder.delivery.delivery_user,
+            } : null,
+            products: dbUpdatedOrder.products.map(product => product.product),
         };
+
+        return updatedOrder;
     }
 
     private async isUserEmployee(userId: number) {
@@ -378,7 +463,7 @@ export class OrderService {
         });
 
         if (user === null) {
-            throw new NotFoundException('User does not exist.');
+            throw new NotFoundException(USER_ERRORS.NOT_FOUND());
         }
 
         const isUserEmployee = user.user_type === 'ADMIN' || user.user_type === 'DELIVERY_BOY' || user.user_type === 'MANAGER';
@@ -397,7 +482,7 @@ export class OrderService {
             });
 
             if (foundOrder === null) {
-                throw new NotFoundException('Order does not exist.');
+                throw new NotFoundException(ORDER_ERRORS.NOT_FOUND());
             }
 
             order = foundOrder;
@@ -409,23 +494,21 @@ export class OrderService {
             });
 
             if (foundOrder === null) {
-                throw new NotFoundException('Order does not exist.');
+                throw new NotFoundException(ORDER_ERRORS.NOT_FOUND());
             }
 
             order = foundOrder;
         }
 
         if (order === null) {
-            throw new NotFoundException('Order does not exist.');
+            throw new NotFoundException(ORDER_ERRORS.NOT_FOUND());
         }
 
         return order;
     }
-
 }
 
 type GetOrdersReturnType = {
     orders: Order[];
     total: number;
 };
-
