@@ -3,25 +3,16 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/shared/decorators';
 import { AccessTokenGuard } from 'src/shared/guards';
-import { OrderByQuery } from 'src/shared/interfaces/queries.interface';
-import { ParseOptionalIntPipe } from 'src/shared/pipe/ParseOptionalInt.pipe';
-import { ValidateOrderByQueryPipe } from 'src/shared/pipe/ValidateOrderByQuery.pipe';
-import { createProductSchema } from './config/createProductSchema.config';
-import { createProductUploadConfig } from './config/createProductUpload.config';
-import { updateProductUploadConfig } from './config/updateProductUpload.config';
-import { updateProductSchema } from './config/updateProductSchema.config';
-import { CreateProductDto } from './dto/create-product.dto';
-import type { GetProductsQueryParams } from './interfaces/GetProductsQueryParams.interface';
-import { ProductSortQuery } from './interfaces/ProductSortQuery.interface';
-import { ValidateImage } from './pipes/ValidateImage.pipe';
-import { ValidateProductSortQueryPipe } from './pipes/ValidateSortQuery.pipe';
+import { OrderByQuery } from 'src/shared/interfaces';
+import { ParseOptionalIntPipe, ValidateOrderByQueryPipe } from 'src/shared/pipe';
+import { createProductUploadConfig, updateProductUploadConfig } from './config';
+import { CreateProductDto, UpdateProductDto } from './dto';
+import type { GetProductsQueryParams } from './interfaces';
+import { ProductSortQuery } from './interfaces';
+import { ValidateImage, ValidateProductSortQueryPipe } from './pipes';
 import { ProductService } from './product.service';
-import { CreateProductResponse } from './responses/createProduct.response';
-import { GetProductResponse } from './responses/GetProduct.response';
-import { GetProductsResponse } from './responses/getProducts.response';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { UpdateProductResponse } from './responses/updateProduct.response';
-import { PopularProductsResponse } from './responses/popularProducts.response';
+import { CreateProductResponse, GetProductsResponse, PopularProductsResponse, GetProductResponse, UpdateProductResponse } from './responses';
+import { createProductSchema, updateProductSchema } from './schemas';
 
 @ApiTags('Product')
 @Controller('products')

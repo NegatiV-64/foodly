@@ -3,11 +3,10 @@ import { unlink } from 'fs/promises';
 import { join } from 'path';
 import { cwd } from 'process';
 import { EmployeeService } from 'src/employee/employee.service';
-import { CATEGORY_ERRORS, PRODUCT_ERRORS } from 'src/shared/errors/errors';
 import { PrismaService } from 'src/prisma/prisma.service';
-import type { CreateProductDto } from './dto/create-product.dto';
-import type { UpdateProductDto } from './dto/update-product.dto';
-import type { GetProductsQueryParams } from './interfaces/GetProductsQueryParams.interface';
+import { CATEGORY_ERRORS, PRODUCT_ERRORS } from 'src/shared/errors';
+import type { CreateProductDto, UpdateProductDto } from './dto';
+import type { GetProductsQueryParams } from './interfaces';
 
 @Injectable()
 export class ProductService {

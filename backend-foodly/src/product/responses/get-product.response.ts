@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-class Category {
+class GetProductCategory {
     @ApiProperty()
     category_id: number;
 
@@ -14,7 +14,7 @@ class Category {
     category_slug: string;
 }
 
-class Product {
+export class GetProductResponse {
     @ApiProperty()
     product_id: number;
 
@@ -33,15 +33,6 @@ class Product {
     @ApiProperty()
     product_category_id: number;
 
-    @ApiProperty({ type: Category })
-    category: Category;
+    @ApiProperty({ type: GetProductCategory })
+    category: GetProductCategory;
 }
-
-export class GetProductsResponse {
-    @ApiProperty({ type: [Product] })
-    products: Product[];
-
-    @ApiProperty()
-    total: number;
-}
-
