@@ -3,13 +3,13 @@ import type { Category as PrismaCategory } from '@prisma/client';
 
 export class GetCategoriesResponse {
     @ApiProperty()
-    categories: Category[];
+    categories: GetCategoriesCategory[];
 
     @ApiProperty()
     total: number;
 }
 
-class Category implements PrismaCategory {
+class GetCategoriesCategory implements PrismaCategory {
     @ApiProperty()
     category_id: number;
 

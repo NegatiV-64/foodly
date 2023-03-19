@@ -2,17 +2,12 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } f
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/shared/decorators';
 import { AccessTokenGuard } from 'src/shared/guards';
-import { OrderByQuery } from 'src/shared/interfaces/queries.interface';
-import { ValidateOrderByQueryPipe } from 'src/shared/pipe/ValidateOrderByQuery.pipe';
+import { OrderByQuery } from 'src/shared/interfaces';
+import { ValidateOrderByQueryPipe } from 'src/shared/pipe';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-import type { GetCategoriesQueries } from './interfaces/GetCategoriesQueries.interface';
-import { CreateCategoryResponse } from './responses/createCategory.response';
-import { DeleteCategoryResponse } from './responses/deleteCategory.response';
-import { GetCategoriesResponse } from './responses/getCategories.response';
-import { GetCategoryResponse } from './responses/getCategory.interface';
-import { UpdateCategoryResponse } from './responses/updateCategory.response';
+import { CreateCategoryDto, UpdateCategoryDto } from './dto';
+import type { GetCategoriesQueries } from './interfaces';
+import { CreateCategoryResponse, GetCategoriesResponse, UpdateCategoryResponse, GetCategoryResponse, DeleteCategoryResponse } from './responses';
 
 @ApiTags('Category')
 @Controller('categories')

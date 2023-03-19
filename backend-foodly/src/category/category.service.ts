@@ -1,12 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { EmployeeService } from 'src/employee/employee.service';
-import { CATEGORY_ERRORS } from 'src/shared/errors/errors';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CATEGORY_ERRORS } from 'src/shared/errors';
 import { slugify } from 'src/shared/utils/slugify.util';
-import type { CreateCategoryDto } from './dto/create-category.dto';
-import type { UpdateCategoryDto } from './dto/update-category.dto';
-import type { GetCategoriesQueries } from './interfaces/GetCategoriesQueries.interface';
-import type { GetCategoriesWithProductsQueryParams } from './interfaces/GetCategoriesWithProductsQueryParams.interface';
+import type { CreateCategoryDto, UpdateCategoryDto } from './dto';
+import type { GetCategoriesQueries, GetCategoriesWithProductsQueryParams } from './interfaces';
 
 @Injectable()
 export class CategoryService {
