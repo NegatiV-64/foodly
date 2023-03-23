@@ -36,17 +36,18 @@ export interface GetOrderReturnType {
         payment_type: PaymentType;
     }>;
     delivery: Nullable<{
-        delivery_address: string;
-        delivery_date: Date | null;
         delivery_id: string;
-        delivery_status: DeliveryStatus;
-        delivery_price: Decimal | number;
         delivery_boy: Nullable<{
             user_id: number;
             user_firstname: string | null;
             user_lastname: string | null;
             user_phone: string;
         }>;
+        delivery_status: DeliveryStatus;
+        delivery_price: Decimal | number;
+        delivery_address: string;
+        delivery_created_at: Date;
+        delivery_finished_at: Date | null;
     }>;
 }
 

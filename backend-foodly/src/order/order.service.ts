@@ -216,19 +216,20 @@ export class OrderService {
                 },
                 delivery: {
                     select: {
-                        delivery_address: true,
-                        delivery_date: true,
                         delivery_id: true,
-                        delivery_status: true,
-                        delivery_price: true,
-                        delivery_user: {
+                        delivery_boy: {
                             select: {
                                 user_id: true,
                                 user_firstname: true,
                                 user_lastname: true,
                                 user_phone: true,
-                            }
-                        }
+                            },
+                        },
+                        delivery_status: true,
+                        delivery_price: true,
+                        delivery_address: true,
+                        delivery_created_at: true,
+                        delivery_finished_at: true,
                     }
                 },
                 payment: {
@@ -267,13 +268,10 @@ export class OrderService {
             }
         }
 
+
         // Modify the order to match the GetOrder interface
         const order: GetOrderReturnType = {
             ...dbOrder,
-            delivery: dbOrder.delivery ? {
-                ...dbOrder.delivery,
-                delivery_boy: dbOrder.delivery.delivery_user,
-            } : null,
             products: dbOrder.products.map(product => product.product),
         };
 
@@ -348,18 +346,19 @@ export class OrderService {
                     delivery: {
                         select: {
                             delivery_id: true,
-                            delivery_address: true,
-                            delivery_status: true,
-                            delivery_date: true,
-                            delivery_price: true,
-                            delivery_user: {
+                            delivery_boy: {
                                 select: {
                                     user_id: true,
                                     user_firstname: true,
                                     user_lastname: true,
                                     user_phone: true,
-                                }
+                                },
                             },
+                            delivery_status: true,
+                            delivery_price: true,
+                            delivery_address: true,
+                            delivery_created_at: true,
+                            delivery_finished_at: true,
                         }
                     },
                     payment: {
@@ -374,10 +373,6 @@ export class OrderService {
 
             const updatedOrder: UpdateOrderReturnType = {
                 ...dbUpdatedOrder,
-                delivery: dbUpdatedOrder.delivery ? {
-                    ...dbUpdatedOrder.delivery,
-                    delivery_boy: dbUpdatedOrder.delivery.delivery_user,
-                } : null,
                 products: dbUpdatedOrder.products.map(product => product.product),
             };
 
@@ -419,18 +414,19 @@ export class OrderService {
                 delivery: {
                     select: {
                         delivery_id: true,
-                        delivery_address: true,
-                        delivery_status: true,
-                        delivery_date: true,
-                        delivery_price: true,
-                        delivery_user: {
+                        delivery_boy: {
                             select: {
                                 user_id: true,
                                 user_firstname: true,
                                 user_lastname: true,
                                 user_phone: true,
-                            }
+                            },
                         },
+                        delivery_status: true,
+                        delivery_price: true,
+                        delivery_address: true,
+                        delivery_created_at: true,
+                        delivery_finished_at: true,
                     }
                 },
                 payment: {
@@ -445,10 +441,6 @@ export class OrderService {
 
         const updatedOrder: UpdateOrderReturnType = {
             ...dbUpdatedOrder,
-            delivery: dbUpdatedOrder.delivery ? {
-                ...dbUpdatedOrder.delivery,
-                delivery_boy: dbUpdatedOrder.delivery.delivery_user,
-            } : null,
             products: dbUpdatedOrder.products.map(product => product.product),
         };
 

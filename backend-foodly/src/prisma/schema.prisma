@@ -78,15 +78,16 @@ model Payment {
 }
 
 model Delivery {
-  delivery_id      String         @id @default(uuid())
-  delivery_user    User?          @relation(fields: [delivery_boy], references: [user_id])
-  delivery_boy     Int?
-  delivery_status  DeliveryStatus
-  delivery_price   Decimal
-  delivery_address String
-  delivery_date    DateTime?
-  delivery_order   String
-  Order            Order?
+  delivery_id          String         @id @default(uuid())
+  delivery_boy         User?          @relation(fields: [delivery_boy_id], references: [user_id])
+  delivery_boy_id      Int?
+  delivery_status      DeliveryStatus
+  delivery_price       Decimal
+  delivery_address     String
+  delivery_finished_at DateTime?
+  delivery_created_at  DateTime       @default(now())
+  delivery_order_id    String
+  Order                Order?
 }
 
 model Feedback {

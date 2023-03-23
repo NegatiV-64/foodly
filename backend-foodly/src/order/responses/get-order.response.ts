@@ -43,7 +43,7 @@ class GetOrderUser {
     user_type: UserRole;
 }
 
-class GetOrderDeliveryBody {
+class GetOrderDeliveryBoy {
     @ApiProperty()
     user_id: number;
 
@@ -61,20 +61,23 @@ class GetOrderDelivery {
     @ApiProperty()
     delivery_id: string;
 
-    @ApiProperty()
-    delivery_address: string;
+    @ApiProperty({ type: GetOrderDeliveryBoy, nullable: true })
+    delivery_boy: GetOrderDeliveryBoy;
 
     @ApiProperty({ enum: DeliveryStatus })
     delivery_status: DeliveryStatus;
 
-    @ApiProperty({ nullable: true })
-    delivery_date: Date;
-
     @ApiProperty()
     delivery_price: number;
 
-    @ApiProperty({ type: GetOrderDeliveryBody, nullable: true })
-    delivery_boy: GetOrderDeliveryBody;
+    @ApiProperty()
+    delivery_address: string;
+
+    @ApiProperty({ nullable: true })
+    delivery_finished_at: Date;
+
+    @ApiProperty()
+    delivery_created_at: Date;
 }
 
 class GetOrderPayment {
