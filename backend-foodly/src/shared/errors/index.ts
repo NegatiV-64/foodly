@@ -4,3 +4,4 @@ export * from './category.errors';
 export * from './order.errors';
 export * from './product.errors';
 export * from './user.errors';
+export * from './delivery.errors';

@@ -61,20 +61,23 @@ class UpdateOrderStatusDelivery {
     @ApiProperty()
     delivery_id: string;
 
-    @ApiProperty()
-    delivery_address: string;
+    @ApiProperty({ type: UpdateOrderStatusDeliveryBody, nullable: true })
+    delivery_boy: UpdateOrderStatusDeliveryBody;
 
     @ApiProperty({ enum: DeliveryStatus })
     delivery_status: DeliveryStatus;
 
-    @ApiProperty({ nullable: true })
-    delivery_date: Date;
-
     @ApiProperty()
     delivery_price: number;
 
-    @ApiProperty({ type: UpdateOrderStatusDeliveryBody, nullable: true })
-    delivery_boy: UpdateOrderStatusDeliveryBody;
+    @ApiProperty()
+    delivery_address: string;
+
+    @ApiProperty({ nullable: true })
+    delivery_finished_at: Date;
+
+    @ApiProperty()
+    delivery_created_at: Date;
 }
 
 class UpdateOrderStatusPayment {

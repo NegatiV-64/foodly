@@ -101,7 +101,7 @@ export class GetOrderResponse implements GetOrderReturnType {
     @ApiProperty()
     order_price: number;
 
-    @ApiProperty()
+    @ApiProperty({ enum: OrderStatus })
     order_status: OrderStatus;
 
     @ApiProperty()

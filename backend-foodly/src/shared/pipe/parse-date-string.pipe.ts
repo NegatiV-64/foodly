@@ -1,12 +1,9 @@
 import type { PipeTransform } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
-import * as dayjs from 'dayjs';
-import * as customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
+import { dayjs } from '../libs/dayjs.lib';
 
-/** @deprecated Use ParseDateStringPipe  */
 @Injectable()
-export class ParseDatePipe implements PipeTransform {
+export class ParseDateStringPipe implements PipeTransform {
     public transform(value: string | undefined) {
         if (value === undefined) {
             return undefined;
@@ -18,6 +15,8 @@ export class ParseDatePipe implements PipeTransform {
             return undefined;
         }
 
-        return value;
+        const formattedData = date.format('YYYY-MM-DD');
+
+        return formattedData;
     }
 }
