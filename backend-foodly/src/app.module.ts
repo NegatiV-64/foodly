@@ -13,6 +13,7 @@ import { join } from 'path';
 import { cwd } from 'process';
 import { OrderModule } from './order/order.module';
 import { DeliveryModule } from './delivery/delivery.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { DeliveryModule } from './delivery/delivery.module';
     ProductModule,
     OrderModule,
     DeliveryModule,
+    PaymentModule,
   ],
   controllers: [],
   providers: [],
