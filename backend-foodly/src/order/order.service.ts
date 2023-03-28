@@ -44,6 +44,13 @@ export class OrderService {
                 order_user_id: userId,
                 order_price: priceOfProducts,
                 order_status: 'HOLD',
+            },
+            select: {
+                order_id: true,
+                order_created_at: true,
+                order_price: true,
+                order_status: true,
+                order_user_id: true,
             }
         });
 
@@ -57,10 +64,12 @@ export class OrderService {
             })
         });
 
-        return {
+        const orderWithProducts: CreateOrderReturnType = {
             ...order,
             products: foundProducts,
         };
+
+        return orderWithProducts;
     }
 
     public async getOrders(userId: number, { created, order = 'asc', skip, sort = 'order_created_at', take, userSearch }: GetOrdersQueryParams): Promise<GetOrdersReturnType> {

@@ -67,8 +67,6 @@ export interface CreateOrderReturnType {
     order_price: Decimal;
     order_status: OrderStatus;
     order_user_id: number;
-    order_payment_id: string | null;
-    order_delivery_id: string | null;
 }
 
 export type UpdateOrderReturnType = GetOrderReturnType;
