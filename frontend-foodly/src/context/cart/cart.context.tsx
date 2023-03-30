@@ -22,19 +22,19 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const totalPrice = useMemo(() => items.reduce((acc, item) => acc + item.product_price * item.product_quantity, 0), [items]);
     const totalQuantity = useMemo(() => items.reduce((acc, item) => acc + item.product_quantity, 0), [items]);
 
-    function addItem(item: CartItem) {
-        const itemIndex = items.findIndex((item) => item.product_id === item.product_id);
+    function addItem(meal: CartItem) {
+        const itemIndex = items.findIndex((item) => item.product_id === meal.product_id);
 
         setItems((prevItems) => {
             // If item already exists in cart, update quantity
             if (itemIndex >= 0) {
                 const updatedItems = [...prevItems];
-                updatedItems[itemIndex].product_quantity += item.product_quantity;
+                updatedItems[itemIndex].product_quantity += meal.product_quantity;
                 return updatedItems;
             }
 
             // If item does not exist in cart, add it
-            return [...prevItems, item];
+            return [...prevItems, meal];
         });
     }
 

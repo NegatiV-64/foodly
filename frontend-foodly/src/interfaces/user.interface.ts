@@ -7,5 +7,5 @@ export interface User {
     user_email: string;
     user_phone: string;
     user_address: string;
-    user_type: string;
+    user_type: UserType;
 }

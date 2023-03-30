@@ -84,7 +84,7 @@ export const Cart: FC = () => {
                 }
             )}>
                 <div className='relative'>
-                    <Heading className='mb-4 text-center' size='3xl'>
+                    <Heading className='mb-5 text-center' size='3xl'>
                         Your Cart
                     </Heading>
                     <IconButton onClick={onCloseCartContent} className='absolute top-0 right-0 rounded-lg'>
@@ -94,7 +94,7 @@ export const Cart: FC = () => {
                         items.length > 0
                             ?
                             <Fragment>
-                                <div className='mb-12'>
+                                <div className='mb-12 flex flex-col gap-y-3'>
                                     {
                                         items.map((item) => {
                                             return (
@@ -146,7 +146,7 @@ const CartProduct = ({ item }: { item: CartItem }) => {
     }
 
     return (
-        <article className='flex items-center gap-x-3 rounded-b-lg border-b-2 border-solid border-b-orange-500 px-1 pb-2'>
+        <article className='grid grid-cols-[0.8fr,1.4fr,0.8fr] items-center gap-x-3 rounded-b-lg border-b-2 border-solid border-b-orange-500 px-1 pb-2'>
             <Image
                 src={getBackendFileUrl(item.product_image)}
                 alt={item.product_name}
