@@ -7,7 +7,6 @@ import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import type { UserType } from '@/interfaces/user.interface';
 import { RoutesConfig } from '@/config/routes.config';
 import { authRefresh } from '@/api/auth/refresh.api';
-import { NODE_ENV } from '@/config/env.config';
 
 const authContext = createContext<AuthContext>({} as AuthContext);
 
@@ -62,9 +61,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
         // If there are no tokens, redirect to login page
         if (accessToken === undefined && refreshToken === undefined) {
-            if (NODE_ENV === 'production') {
-                replace(RoutesConfig.Login);
-            }
             return null;
         }
 
