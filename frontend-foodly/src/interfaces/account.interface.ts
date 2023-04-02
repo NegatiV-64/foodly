@@ -9,6 +9,18 @@ export interface Account {
     user_type: string;
     delivery: unknown[];
     feedback: unknown[];
-    order: unknown[];
-    payment: unknown[];
+    order: {
+        order_id: string;
+        order_created_at: string;
+        order_price: string;
+        order_status: string;
+        order_user_id: number;
+        order_delivery_id: null;
+    }[];
+    payment: {
+        payment_id: string;
+        payment_date: string;
+        payment_type: string;
+        payment_user_id: number;
+    }[];
 }

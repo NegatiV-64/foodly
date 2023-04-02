@@ -163,7 +163,7 @@ function getRequestConfig(options: FetchOptions, hasAuth: boolean, isJSON: boole
 
 async function refrehTokenHandler(token: string, context?: GetServerSidePropsContext) {
     const rawResponse = await fetch(`${BACKEND_URL}/auth/refresh`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
