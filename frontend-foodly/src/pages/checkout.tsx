@@ -23,38 +23,58 @@ import { cn } from '@/utils/cn.util';
 import { getAccount } from '@/api/account/getAccount.api';
 import type { Account } from '@/interfaces/account.interface';
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import type { CreatePaymentBody } from '@/api/payments/createPayment.api';
+import { createPayment } from '@/api/payments/createPayment.api';
+import { createDelivery } from '@/api/deliveries/createDelivery.api';
+import { useRouter } from 'next/router';
+import { RoutesConfig } from '@/config/routes.config';
+
+// A little note about the form:
+// I know that that in real production app, for handling address
+// we should use some kind of address picker that uses geolocation
+// and some API to fetch/autocomplete addresses. But I don't have
+// time to implement it. If you really want to implement such kind of
+// functionality, I recommend using Nominatim API (https://nominatim.org/release-docs/develop/)
+// It is free and doesn't require any API keys. It is used by OpenStreetMap and you
+// can mix it with Leaflet to create a map with address input and autocomplete.
 
 const paymentMethods = [
     {
         label: 'Cash on delivery',
-        value: 'cash',
+        value: 'CASH',
     },
     {
         label: 'Card',
-        value: 'card',
+        value: 'CREDIT',
     }
 ];
 
 const CheckoutPage: NextPage = () => {
-    const { items, totalPrice } = useCart();
+    // Contexts
+    const { items, totalPrice, clearCart } = useCart();
 
-    const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card'>('card');
+    // Router
+    const { push } = useRouter();
+
+    // States
+    const [paymentMethod, setPaymentMethod] = useState<'CASH' | 'CREDIT'>('CREDIT');
     const [orderData, setOrderData] = useState<CreateOrderResponse | null>(null);
     const [userData, setUserData] = useState<null | Pick<Account, 'user_address' | 'user_phone' | 'user_lastname' | 'user_firstname'>>(null);
 
     // Dialogs
     const [showErrorDialog, onOpenErrorDialog, onCloseErrorDialog] = useDialog();
     const [errorText, setErrorText] = useState<string>('');
+    const [showSuccessDialog, onOpenSuccessDialog, onCloseSuccessDialog] = useDialog();
 
     // Form
-    const { register } = useForm();
+    const { register, handleSubmit } = useForm<SaveDeliveryAndPaymentFormFields>();
 
     // Derived Values
     const showProcessToPayment = orderData === null;
     const showPaymentDetails = orderData !== null;
     const shouldRenderCheckout = items.length > 0;
 
-    function onPaymentMethodChange(value: 'cash' | 'card') {
+    function onPaymentMethodChange(value: 'CASH' | 'CREDIT') {
         setPaymentMethod(value);
     }
 
@@ -95,9 +115,62 @@ const CheckoutPage: NextPage = () => {
         });
     }
 
+    async function onSaveDeliveryAndPayment(data: SaveDeliveryAndPaymentFormFields) {
+        console.log(data);
+        if (orderData === null) {
+            setErrorText('Something went wrong while creating order. Please try again later.');
+            onOpenErrorDialog();
+            return null;
+        }
+
+        if (userData === null) {
+            setErrorText('Something went wrong while fetching account data. Please try again later.');
+            onOpenErrorDialog();
+            return null;
+        }
+
+        const paymentRequestBody: CreatePaymentBody = {
+            order_id: orderData.order_id,
+            payment_type: paymentMethod,
+        };
+
+        if (paymentMethod === 'CREDIT') {
+            if (data.card_number === undefined) {
+                setErrorText('Please enter card number');
+                onOpenErrorDialog();
+                return null;
+            }
+
+            paymentRequestBody.payment_credit_card = data.card_number;
+        }
+
+        const createPaymentResponse = await createPayment(paymentRequestBody);
+        if (createPaymentResponse.ok === false || createPaymentResponse.data === null) {
+            setErrorText(`Something went wrong while creating payment. Error code: ${createPaymentResponse.code}. Reason: ${createPaymentResponse.error}`);
+            onOpenErrorDialog();
+            return null;
+        }
+
+        // Create delivery
+        const createDeliveryResponse = await createDelivery({
+            order_id: orderData.order_id,
+            delivery_address: data.address,
+            delivery_charge: 10_000,
+        });
+
+        if (createDeliveryResponse.ok === false || createDeliveryResponse.data === null) {
+            setErrorText(`Something went wrong while creating delivery. Error code: ${createDeliveryResponse.code}. Reason: ${createDeliveryResponse.error}`);
+            onOpenErrorDialog();
+            return null;
+        }
+
+        onOpenSuccessDialog();
+    }
+
     const styles = {
         field: 'flex flex-col gap-y-1',
         label: 'block text-sm font-medium text-stone-900',
+        required: 'text-red-500',
         input: 'block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm'
     };
 
@@ -143,9 +216,11 @@ const CheckoutPage: NextPage = () => {
                                     </div>
                                     {
                                         showPaymentDetails === true &&
-                                        <form className={cn(
-                                            'rounded-lg bg-white px-5 pt-4 pb-8',
-                                        )}>
+                                        <form
+                                            onSubmit={handleSubmit(onSaveDeliveryAndPayment)}
+                                            className={cn(
+                                                'rounded-lg bg-white px-5 pt-4 pb-8',
+                                            )}>
                                             <div>
                                                 <Heading as='h2' size='lg' weight='medium' className='text-gray-900'>
                                                     Delivery Details
@@ -158,51 +233,43 @@ const CheckoutPage: NextPage = () => {
                                                     <div className='mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4'>
                                                         <div className={styles.field}>
                                                             <label htmlFor='firstname' className={styles.label}>
-                                                                First Name
+                                                                First Name {' '} <span className={styles.required}>*</span>
                                                             </label>
                                                             <input
+                                                                required={true}
                                                                 className={styles.input}
-                                                                defaultValue={userData?.user_firstname}
-                                                                placeholder='Your name'
+                                                                disabled={userData?.user_firstname !== null}
+                                                                defaultValue={userData?.user_firstname ?? ''}
+                                                                placeholder='Your first name'
                                                                 type='text'
                                                                 id='name'
                                                                 {...register('firstname')}
                                                             />
                                                         </div>
                                                         <div className={styles.field}>
-                                                            <label htmlFor='surname' className={styles.label}>
-                                                                Last Name
+                                                            <label htmlFor='lastname' className={styles.label}>
+                                                                Last Name {' '} <span className={styles.required}>*</span>
                                                             </label>
                                                             <input
+                                                                required={true}
                                                                 className={styles.input}
-                                                                defaultValue={userData?.user_lastname}
-                                                                placeholder='Your surname'
+                                                                disabled={userData?.user_lastname !== null}
+                                                                defaultValue={userData?.user_lastname ?? ''}
+                                                                placeholder='Your last name'
                                                                 type='text'
-                                                                id='surname'
-                                                                {...register('surname')}
+                                                                id='lastname'
+                                                                {...register('lastname')}
                                                             />
                                                         </div>
                                                     </div>
                                                     <div className={cn(styles.field, 'mt-3')}>
-                                                        <label className={styles.label} htmlFor='phone'>
-                                                            Phone
-                                                        </label>
-                                                        <input
-                                                            className={styles.input}
-                                                            defaultValue={userData?.user_phone}
-                                                            placeholder='Your phone'
-                                                            type={'number'}
-                                                            id='phone'
-                                                            {...register('phone')}
-                                                        />
-                                                    </div>
-                                                    <div className={cn(styles.field, 'mt-3')}>
                                                         <label htmlFor='address' className={styles.label}>
-                                                            Address
+                                                            Address {' '} <span className={styles.required}>*</span>
                                                         </label>
                                                         <input
+                                                            required={true}
                                                             className={styles.input}
-                                                            defaultValue={userData?.user_address}
+                                                            defaultValue={userData?.user_address ?? ''}
                                                             placeholder='Your address'
                                                             type='text'
                                                             id='address'
@@ -250,20 +317,23 @@ const CheckoutPage: NextPage = () => {
                                                         }
                                                     </RadioGroup.Root>
                                                 </div>
-                                                <div className={cn(styles.field, 'mt-3')}>
-                                                    <label className={styles.label} htmlFor="card-number">
-                                                        Card Number
-                                                    </label>
-                                                    <input
-                                                        className={styles.input}
-                                                        type="text"
-                                                        id="card-number"
-                                                        autoComplete="cc-number"
-                                                        {...register('card-number')}
-                                                    />
-                                                </div>
+                                                {
+                                                    paymentMethod === 'CREDIT' &&
+                                                    <div className={cn(styles.field, 'mt-3')}>
+                                                        <label className={styles.label} htmlFor="card_number">
+                                                            Card Number
+                                                        </label>
+                                                        <input
+                                                            className={styles.input}
+                                                            type="text"
+                                                            id="card_number"
+                                                            autoComplete="cc-number"
+                                                            {...register('card_number')}
+                                                        />
+                                                    </div>
+                                                }
                                             </div>
-                                            <Button className='mt-7 flex'>
+                                            <Button type='submit' className='mt-7 flex'>
                                                 Confirm order
                                             </Button>
                                         </form>
@@ -298,9 +368,44 @@ const CheckoutPage: NextPage = () => {
                         </Button>
                     </DialogFooter>
                 </Dialog>
+                <Dialog
+                    open={showSuccessDialog}
+                    onClose={onCloseSuccessDialog}
+                >
+                    <DialogHeader>
+                        <DialogTitle>
+                            Order has been placed successfully
+                        </DialogTitle>
+                    </DialogHeader>
+                    <DialogBody>
+                        <Text className='text-center'>
+                            Your order has been placed successfully. Delivery will be made within next hour. Thank you for choosing us.
+                        </Text>
+                    </DialogBody>
+                    <DialogFooter className='flex justify-center'>
+                        <Button
+                            className='w-fit'
+                            onClick={() => {
+                                onCloseSuccessDialog();
+                                clearCart();
+                                push(RoutesConfig.Home);
+                            }}
+                        >
+                            Close
+                        </Button>
+                    </DialogFooter>
+                </Dialog>
             </Protected>
         </Page>
     );
 };
+
+interface SaveDeliveryAndPaymentFormFields {
+    firstname: string;
+    lastname: string;
+    phone: string;
+    address: string;
+    card_number?: string;
+}
 
 export default CheckoutPage;

@@ -27,7 +27,7 @@ export class PaymentService {
 
         const order = await this.prisma.order.findUnique({
             where: {
-                order_id
+                order_id: order_id,
             },
             select: {
                 order_id: true,
@@ -53,7 +53,7 @@ export class PaymentService {
             data: {
                 payment_type: payment_type,
                 payment_order_id: order_id,
-                payment_user_id: isUserEmployee ? payment_user_id : userId
+                payment_user_id: (isUserEmployee && payment_user_id !== undefined) ? payment_user_id : userId
             }
         });
 
