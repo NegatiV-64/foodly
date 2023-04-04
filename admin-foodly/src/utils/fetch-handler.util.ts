@@ -1,7 +1,7 @@
 import { BACKEND_URL, NODE_ENV } from '@/config/env.config';
 import type { GetServerSidePropsContext } from 'next';
 import { setCookie, getCookie } from 'cookies-next';
-import { AccessTokenData, RefreshTokenData } from '@/interfaces/auth.interface';
+import type { AccessTokenData, RefreshTokenData } from '@/interfaces/auth.interface';
 import { decodeJwt } from '@/utils/decode-jwt.util';
 
 export const fetchHandler = async <ResponseData = unknown, ResponseError = unknown>(
