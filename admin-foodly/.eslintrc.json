@@ -1,0 +1,97 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended",
+    "next/core-web-vitals"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "react"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parser": "@typescript-eslint/parser"
+    }
+  ],
+  "rules": {
+    "prefer-const": "error",
+    "eqeqeq": "error",
+    "default-case": "error",
+    "prefer-template": "error",
+    "no-undef-init": "warn",
+    "@typescript-eslint/member-delimiter-style": [
+      "error",
+      {
+        "multiline": {
+          "delimiter": "semi",
+          "requireLast": true
+        },
+        "singleline": {
+          "delimiter": "semi",
+          "requireLast": false
+        },
+        "multilineDetection": "brackets"
+      }
+    ],
+    "semi": "off",
+    "@typescript-eslint/semi": [
+      "warn"
+    ],
+    "quotes": "off",
+    "@typescript-eslint/quotes": [
+      "warn",
+      "single"
+    ],
+    "@typescript-eslint/prefer-as-const": "error",
+    "default-param-last": "off",
+    "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/default-param-last": "warn",
+    "no-duplicate-imports": "off",
+    "@typescript-eslint/no-duplicate-imports": "warn",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "args": "all",
+        "ignoreRestSiblings": false,
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "react/jsx-boolean-value": [
+      "warn",
+      "always"
+    ],
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [
+          ".tsx",
+          ".ts"
+        ]
+      }
+    ],
+    "react/jsx-fragments": [
+      "error",
+      "element"
+    ],
+    "react/jsx-pascal-case": [
+      "error"
+    ],
+    "react/button-has-type": "warn",
+    "react/prop-types": "off",
+    "@next/next/no-html-link-for-pages": "off"
+  }
+}
