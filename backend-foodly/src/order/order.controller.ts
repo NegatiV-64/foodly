@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/shared/decorators';
 import { AccessTokenGuard } from 'src/shared/guards';
 import { OrderByQuery } from 'src/shared/interfaces';
 import { ParseOptionalIntPipe, ParseDatePipe, ValidateOrderByQueryPipe } from 'src/shared/pipe';
 import { CreateOrderDto, UpdateOrderStatusDto } from './dto';
-import type { GetOrdersQueryParams } from './interfaces';
-import { OrderSort } from './interfaces';
+import type { GetOrdersQueryParams} from './interfaces';
+import { orderSortValues, OrderSort } from './interfaces';
 import { OrderService } from './order.service';
 import { ValidateOrderSortPipe } from './pipes/ValidateOrderSortPipe.pipe';
 import { CreateOrderResponse, GetOrderResponse, UpdateOrderStatusResponse } from './responses';
@@ -40,6 +40,38 @@ export class OrderController {
     })
     @ApiOkResponse({
         description: 'Orders fetched successfully',
+    })
+    @ApiQuery({
+        name: 'take',
+        required: false,
+        type: Number,
+    })
+    @ApiQuery({
+        name: 'skip',
+        required: false,
+        type: Number,
+    })
+    @ApiQuery({
+        name: 'user',
+        required: false,
+        description: 'Search for orders by user name. Example: "John Doe"',
+        type: String,
+    })
+    @ApiQuery({
+        name: 'created',
+        required: false,
+        description: 'Search for orders by creation date. Format: DD-MM-YYYY. Not implemented yet',
+        type: String,
+    })
+    @ApiQuery({
+        name: 'sort',
+        required: false,
+        enum: orderSortValues,
+    })
+    @ApiQuery({
+        name: 'order',
+        required: false,
+        enum: ['asc', 'desc']
     })
     @UseGuards(AccessTokenGuard)
     public async getOrders(

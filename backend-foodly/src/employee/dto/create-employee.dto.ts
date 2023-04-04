@@ -29,7 +29,7 @@ export class CreateEmployeeDto {
     @IsNotEmptyString()
     last_name: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: employeeTypes })
     @IsString()
     @IsIn(employeeTypes)
     type: EmployeeType;

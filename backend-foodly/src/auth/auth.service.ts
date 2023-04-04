@@ -63,8 +63,14 @@ export class AuthService {
         await this.userService.verifyUser(userToVerify.user_email);
     }
 
-    public async loginUser({ email, password }: LoginUserDto) {
+    public async loginUser({ email, password }: LoginUserDto, typeToChek: 'CUSTOMER' | 'EMPLOYEE' = 'CUSTOMER') {
         const user = await this.userService.validateUser({ email, password });
+
+        if (typeToChek === 'EMPLOYEE') {
+            if (user.user_type === 'CUSTOMER') {
+                throw new UnauthorizedException('You are not allowed to login as employee');
+            }
+        }
 
         const accessTokenPayload: AccessTokenPayload = {
             user_email: user.user_email,

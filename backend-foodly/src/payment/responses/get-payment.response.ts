@@ -18,6 +18,26 @@ class GetPaymentOrder {
     order_status: OrderStatus;
 }
 
+class GetPaymentUser {
+    @ApiProperty()
+    user_id: number;
+
+    @ApiProperty()
+    user_email: string;
+
+    @ApiProperty()
+    user_phone: string;
+
+    @ApiProperty({ nullable: true, type: String })
+    user_address: string | null;
+
+    @ApiProperty({ nullable: true, type: String })
+    user_firstname: string | null;
+
+    @ApiProperty({ nullable: true, type: String })
+    user_lastname: string | null;
+}
+
 export class GetPaymentResponse {
     @ApiProperty({
         enum: PaymentType,
@@ -34,4 +54,9 @@ export class GetPaymentResponse {
 
     @ApiProperty()
     payment_id: string;
+
+    @ApiProperty({
+        type: GetPaymentUser,
+    })
+    user: GetPaymentUser;
 }

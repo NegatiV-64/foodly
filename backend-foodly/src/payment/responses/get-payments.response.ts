@@ -20,6 +20,7 @@ class GetPaymentsPayment {
 }
 
 export class GetPaymentsResponse implements GetPaymentsReturnType {
+    @ApiProperty({ type: [GetPaymentsPayment] })
     payments: GetPaymentsPayment[];
 
     @ApiProperty()

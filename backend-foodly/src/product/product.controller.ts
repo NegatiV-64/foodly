@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/shared/decorators';
 import { AccessTokenGuard } from 'src/shared/guards';
 import { OrderByQuery } from 'src/shared/interfaces';
 import { ParseOptionalIntPipe, ValidateOrderByQueryPipe } from 'src/shared/pipe';
 import { createProductUploadConfig, updateProductUploadConfig } from './config';
 import { CreateProductDto, UpdateProductDto } from './dto';
-import type { GetProductsQueryParams } from './interfaces';
-import { ProductSortQuery } from './interfaces';
+import type { GetProductsQueryParams} from './interfaces';
+import { productSortQuery, ProductSortQuery } from './interfaces';
 import { ValidateImage, ValidateProductSortQueryPipe } from './pipes';
 import { ProductService } from './product.service';
 import { CreateProductResponse, GetProductsResponse, PopularProductsResponse, GetProductResponse, UpdateProductResponse } from './responses';
@@ -48,6 +48,36 @@ export class ProductController {
     @ApiOkResponse({
         description: 'The products have been successfully retrieved. The total number of products is also returned.',
         type: GetProductsResponse,
+    })
+    @ApiQuery({
+        name: 'take',
+        required: false,
+        type: Number,
+    })
+    @ApiQuery({
+        name: 'skip',
+        required: false,
+        type: Number,
+    })
+    @ApiQuery({
+        name: 'category',
+        required: false,
+        type: String,
+    })
+    @ApiQuery({
+        name: 'search',
+        required: false,
+        type: String,
+    })
+    @ApiQuery({
+        name: 'sort',
+        required: false,
+        enum: productSortQuery,
+    })
+    @ApiQuery({
+        name: 'order',
+        required: false,
+        enum: ['asc', 'desc']
     })
     public async getProducts(
         @Query('take', ParseOptionalIntPipe) take?: number,

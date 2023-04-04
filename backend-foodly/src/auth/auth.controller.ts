@@ -77,4 +77,22 @@ export class AuthController {
             access_token, refresh_token
         };
     }
+
+    @ApiOperation({
+        description: 'Logs the employee into the system. After successful login, a pair of tokens is returned. The access token is used to access the system, and the refresh token is used to get a new pair of tokens.',
+    })
+    @HttpCode(HttpStatus.OK)
+    @ApiOkResponse({
+        type: LoginResponse,
+        description: 'User was successfully logged'
+    })
+    @Post('/login/employee')
+    public async loginEmployee(@Body() dto: LoginUserDto) {
+        const { access_token, refresh_token } = await this.authService.loginUser(dto, 'EMPLOYEE');
+
+        return {
+            access_token, refresh_token
+        };
+    }
+
 }

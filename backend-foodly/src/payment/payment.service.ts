@@ -48,6 +48,16 @@ export class PaymentService {
             throw new BadRequestException(PAYMENT_ERRORS.ALREADY_PAID);
         }
 
+        // Update order status to paid
+        await this.prisma.order.update({
+            where: {
+                order_id: order_id
+            },
+            data: {
+                order_status: 'PAID'
+            }
+        });
+
         // Create a new payment and associate it with the order
         const payment = await this.prisma.payment.create({
             data: {
@@ -145,6 +155,16 @@ export class PaymentService {
                         order_status: true,
                     }
                 },
+                user: {
+                    select: {
+                        user_id: true,
+                        user_firstname: true,
+                        user_lastname: true,
+                        user_email: true,
+                        user_phone: true,
+                        user_address: true,
+                    }
+                }
             }
         });
 
