@@ -1,4 +1,5 @@
 import { amountToDisplay } from '@/config/pagination.config';
+import type { Product } from '@/interfaces/product.interface';
 import { fetchHandler } from '@/utils/fetch-handler.util';
 
 export const getProducts = async ({ page = 1, category, order = 'asc', search = '', sort = 'product_id' }: GetProductsQueryParams) => {
@@ -24,18 +25,5 @@ interface GetProductsQueryParams {
 
 interface GetProductsResponse {
     total: number;
-    products: {
-        product_id: number;
-        product_name: string;
-        product_image: string;
-        product_description: string;
-        product_price: number;
-        product_category_id: number;
-        category: {
-            category_id: number;
-            category_icon: string;
-            category_name: string;
-            category_slug: string;
-        };
-    };
+    products: Product[];
 }

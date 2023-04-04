@@ -10,4 +10,5 @@ export interface User {
     user_phone: string;
     user_address: Nullable<string>;
     user_type: UserType;
+    user_is_verified: boolean;
 }

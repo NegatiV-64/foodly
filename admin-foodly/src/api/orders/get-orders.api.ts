@@ -1,4 +1,5 @@
 import { amountToDisplay } from '@/config/pagination.config';
+import type { Order } from '@/interfaces/order.interface';
 import { fetchHandler } from '@/utils/fetch-handler.util';
 import type { GetServerSidePropsContext } from 'next';
 
@@ -27,13 +28,6 @@ export interface GetOrdersQueryParams {
 
 export interface GetOrdersResponse {
     total: number;
-    orders: {
-        order_id: string;
-        order_created_at: string;
-        order_price: number;
-        order_status: 'pending' | 'in_progress' | 'delivered' | 'cancelled';
-        order_user_id: number;
-        order_delivery_id: string | null;
-    }[];
+    orders: Pick<Order, 'order_id' | 'order_created_at' | 'order_price' | 'order_status' | 'order_user_id' | 'order_delivery_id'>[];
 }
 

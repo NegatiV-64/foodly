@@ -1,3 +1,4 @@
+import type { Product } from '@/interfaces/product.interface';
 import { fetchHandler } from '@/utils/fetch-handler.util';
 
 export const updateSingleProduct = async (productId: number, body: UpdateSingleProductBody) => {
@@ -42,11 +43,4 @@ export interface UpdateSingleProductBody {
     product_category_id?: number;
 }
 
-export interface UpdateSingleProductResponse {
-    product_id: number;
-    product_name: string;
-    product_image: string;
-    product_description: string;
-    product_price: number;
-    product_category_id: number;
-}
+export type UpdateSingleProductResponse = Omit<Product, 'category'>;

@@ -1,7 +1,8 @@
+import type { User, UserType } from '@/interfaces/user.interface';
 import { fetchHandler } from '@/utils/fetch-handler.util';
 
 export async function createEmployee(body: CreateEmployeeBody) {
-    const response = await fetchHandler(
+    const response = await fetchHandler<User>(
         '/employees',
         {
             method: 'POST',
@@ -20,5 +21,5 @@ export interface CreateEmployeeBody {
     password: string;
     first_name: string;
     last_name: string;
-    type: 'ADMIN' | 'MANAGER' | 'DELIVERY_BOY';
+    type: UserType;
 }

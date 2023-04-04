@@ -1,3 +1,4 @@
+import type { Product } from '@/interfaces/product.interface';
 import { fetchHandler } from '@/utils/fetch-handler.util';
 
 export const deleteSingleProduct = async (productId: number) => {
@@ -12,11 +13,4 @@ export const deleteSingleProduct = async (productId: number) => {
     return response;
 };
 
-export interface DeleteSingleProductResponse {
-    product_id: number;
-    product_name: string;
-    product_image: string;
-    product_description: string;
-    product_price: number;
-    product_category_id: number;
-}
+export type DeleteSingleProductResponse =  Omit<Product, 'category'>;

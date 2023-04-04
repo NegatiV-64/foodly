@@ -1,4 +1,5 @@
 import { amountToDisplay } from '@/config/pagination.config';
+import type { Payment, PaymentType } from '@/interfaces/payment.interface';
 import { fetchHandler } from '@/utils/fetch-handler.util';
 import type { GetServerSidePropsContext } from 'next';
 
@@ -22,18 +23,12 @@ export interface GetPaymentsQueryParams {
     page?: number;
     order?: 'asc' | 'desc';
     createdAt?: string;
-    type?: 'CASH' | 'CREDIT';
+    type?: PaymentType;
     payerId?: number;
     orderId?: string;
 }
 
 export interface GetPaymentsResponse {
     total: number;
-    payments: {
-        payment_date: string;
-        payment_id: string;
-        payment_order_id: string;
-        payment_type: 'CASH' | 'CREDIT';
-        payment_user_id: number;
-    };
+    payments: Pick<Payment, 'payment_date' | 'payment_id' | 'payment_type' | 'payment_user_id' | 'payment_order_id'>[];
 }

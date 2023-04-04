@@ -1,3 +1,4 @@
+import type { Product } from '@/interfaces/product.interface';
 import { fetchHandler } from '@/utils/fetch-handler.util';
 
 export const createProduct = async (body: CreateProductBody) => {
@@ -30,11 +31,4 @@ export interface CreateProductBody {
     product_category_id: number;
 }
 
-export interface CreateProductResponse {
-    product_id: number;
-    product_name: string;
-    product_image: string;
-    product_description: string;
-    product_price: number;
-    product_category_id: number;
-}
+export type CreateProductResponse = Omit<Product, 'category'>;

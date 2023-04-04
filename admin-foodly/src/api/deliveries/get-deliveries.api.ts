@@ -1,4 +1,5 @@
 import { amountToDisplay } from '@/config/pagination.config';
+import type { Delivery } from '@/interfaces/delivery.interface';
 import { fetchHandler } from '@/utils/fetch-handler.util';
 import type { GetServerSidePropsContext } from 'next';
 
@@ -25,4 +26,9 @@ export interface GetDeliveriesQueryParams {
     createdAt?: string;
     status?: 'on_way' | 'done' | 'canceled' | 'failed' | 'pending';
     sort?: 'delivery_id' | 'delivery_created_at' | 'delivery_finished_at' | 'delivery_price' | 'delivery_status';
+}
+
+export interface GetDeliveriesResponse {
+    total: number;
+    deliveries: Pick<Delivery, 'delivery_id' | 'delivery_boy' | 'delivery_status' | 'delivery_price' | 'delivery_address' | 'delivery_finished_at' | 'delivery_created_at'>[];
 }
