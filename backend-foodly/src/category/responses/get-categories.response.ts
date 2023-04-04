@@ -1,13 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import type { Category as PrismaCategory } from '@prisma/client';
 
-export class GetCategoriesResponse {
-    @ApiProperty()
-    categories: GetCategoriesCategory[];
-
-    @ApiProperty()
-    total: number;
-}
 
 class GetCategoriesCategory implements PrismaCategory {
     @ApiProperty()
@@ -21,4 +14,13 @@ class GetCategoriesCategory implements PrismaCategory {
 
     @ApiProperty()
     category_slug: string;
+}
+
+
+export class GetCategoriesResponse {
+    @ApiProperty({ type: [GetCategoriesCategory] })
+    categories: GetCategoriesCategory[];
+
+    @ApiProperty()
+    total: number;
 }
