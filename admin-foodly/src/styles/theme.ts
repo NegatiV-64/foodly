@@ -298,6 +298,32 @@ export const colors = {
     900: '#881337',
     950: '#4c0519',
   },
+  'forest': {
+    '50': '#f0fdf9',
+    '100': '#ccfbed',
+    '200': '#99f6db',
+    '300': '#5eeac7',
+    '400': '#2dd4b0',
+    '500': '#14b897',
+    '600': '#0d927a',
+    '700': '#0f7665',
+    '800': '#115e52',
+    '900': '#134e45',
+    '950': '#042f2a',
+  },
+  'clay': {
+    '50': '#f3f7f8',
+    '100': '#dfe8ee',
+    '200': '#c3d5de',
+    '300': '#9ab6c6',
+    '400': '#6990a7',
+    '500': '#4e748c',
+    '600': '#436077',
+    '700': '#3b5063',
+    '800': '#364654',
+    '900': '#313c48',
+    '950': '#212b36',
+  },
 };
 
 export const theme = createTheme({
@@ -336,4 +362,45 @@ export const theme = createTheme({
       fontSize: 14,
     },
   },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: colors.gray[500],
+              transition: '0.2s',
+            },
+            '&:hover fieldset': {
+              borderColor: colors.gray[300],
+            }
+          },
+          '& .MuiInputBase-input': {
+            color: colors.white,
+          }
+        }
+      }
+    },
+    MuiButton: {
+      variants: [
+        {
+          props: { variant: 'contained' },
+          style: {
+            backgroundColor: colors.forest[600],
+            color: colors.white,
+            '&:hover': {
+              backgroundColor: colors.forest[700],
+            }
+          }
+        }
+      ]
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          color: colors.white,
+        }
+      }
+    }
+  }
 });
