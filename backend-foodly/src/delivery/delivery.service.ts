@@ -53,7 +53,7 @@ export class DeliveryService {
             this.prisma.delivery.findMany({
                 where: {
                     delivery_created_at: {
-                        gte: created_at ? new Date(dayjs(created_at, 'DD-MM-YYYY').format('YYYY-MM-DD')) : undefined,
+                        gte: created_at ? new Date(created_at) : undefined,
                     },
                     delivery_status: status,
                     Order: {

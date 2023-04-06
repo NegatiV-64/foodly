@@ -59,7 +59,6 @@ export class AccountService {
 
         if (user_email) {
             updateUserData.user_email = user_email;
-            updateUserData.user_is_verified = false;
         }
 
         const updatedUser = await this.prisma.user.update({

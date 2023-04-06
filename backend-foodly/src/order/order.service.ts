@@ -2,7 +2,6 @@ import { BadRequestException, ForbiddenException, Injectable, NotFoundException 
 import type { Prisma, Order, OrderStatus, Product } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import type { CreateOrderReturnType, GetOrderReturnType, GetOrdersQueryParams, UpdateOrderReturnType } from './interfaces';
-import { dayjs } from 'src/shared/libs/dayjs.lib';
 import type { OrderItem } from './dto';
 import { USER_ERRORS, ORDER_ERRORS } from 'src/shared/errors';
 
@@ -91,13 +90,15 @@ export class OrderService {
             throw new BadRequestException(ORDER_ERRORS.NOT_EMPLOYEE);
         }
 
+        const orderCreateAtQuery = created ? new Date(created) : undefined;
+
         if (isUserEmployee === false) {
             const [orders, total] = await this.prisma.$transaction([
                 this.prisma.order.findMany({
                     where: {
                         order_user_id: userId,
                         order_created_at: {
-                            gte: created ? new Date(dayjs(created, 'DD-MM-YYYY').format('YYYY-MM-DD')) : undefined,
+                            gte: orderCreateAtQuery,
                         }
                     },
                     take: take,
@@ -110,7 +111,7 @@ export class OrderService {
                     where: {
                         order_user_id: userId,
                         order_created_at: {
-                            gte: created ? new Date(dayjs(created, 'DD-MM-YYYY').format('YYYY-MM-DD')) : undefined,
+                            gte: orderCreateAtQuery,
                         }
                     }
                 })
@@ -125,7 +126,7 @@ export class OrderService {
             this.prisma.order.findMany({
                 where: {
                     order_created_at: {
-                        gte: created ? new Date(dayjs(created, 'DD-MM-YYYY').format('YYYY-MM-DD')) : undefined,
+                        gte: orderCreateAtQuery,
                     },
                     user: {
                         OR: [
@@ -166,7 +167,7 @@ export class OrderService {
             this.prisma.order.count({
                 where: {
                     order_created_at: {
-                        gte: created ? new Date(dayjs(created, 'DD-MM-YYYY').format('YYYY-MM-DD')) : undefined,
+                        gte: orderCreateAtQuery,
                     },
                     user: {
                         OR: [

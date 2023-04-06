@@ -3,7 +3,7 @@ import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } fr
 import { GetCurrentUser } from 'src/shared/decorators';
 import { AccessTokenGuard } from 'src/shared/guards';
 import { OrderByQuery } from 'src/shared/interfaces';
-import { ParseOptionalIntPipe, ParseDatePipe, ValidateOrderByQueryPipe } from 'src/shared/pipe';
+import { ParseOptionalIntPipe, ValidateOrderByQueryPipe, ParseDateStringPipe } from 'src/shared/pipe';
 import { CreateOrderDto, UpdateOrderStatusDto } from './dto';
 import type { GetOrdersQueryParams} from './interfaces';
 import { orderSortValues, OrderSort } from './interfaces';
@@ -58,7 +58,7 @@ export class OrderController {
         type: String,
     })
     @ApiQuery({
-        name: 'created',
+        name: 'created_at',
         required: false,
         description: 'Search for orders by creation date. Format: DD-MM-YYYY. Not implemented yet',
         type: String,
@@ -79,7 +79,7 @@ export class OrderController {
         @Query('take', ParseOptionalIntPipe) take?: number,
         @Query('skip', ParseOptionalIntPipe) skip?: number,
         @Query('user') userSearch?: string,
-        @Query('created', ParseDatePipe) createdAt?: string,
+        @Query('created_at', ParseDateStringPipe) createdAt?: string,
         @Query('sort', ValidateOrderSortPipe) sort?: OrderSort,
         @Query('order', ValidateOrderByQueryPipe) order?: OrderByQuery,
     ) {
@@ -91,6 +91,7 @@ export class OrderController {
             take,
             userSearch,
         };
+
         const { orders, total } = await this.orderService.getOrders(userId, queryParams);
 
         return {

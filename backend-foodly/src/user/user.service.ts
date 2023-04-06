@@ -53,7 +53,6 @@ export class UserService {
 
     public async validateUser({ email, password }: ValidateUser) {
         const foundUser = await this.findUserByEmail(email);
-
         const isPasswordValid = await verify(foundUser.user_password, password);
 
         if (isPasswordValid === false) {
