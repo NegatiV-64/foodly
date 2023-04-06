@@ -1,12 +1,28 @@
+import { useAuth } from '@/contexts/auth/auth.context';
 import { colors } from '@/styles/theme';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import { Fragment, useMemo, useRef, useState } from 'react';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { LogoutRounded } from '@mui/icons-material';
 
 // TODO Pass auth state to this component and use it to display the user's name
 export const Header = () => {
-    const { bgColor, text } = stringAvatar('Kent Dodds');
+    const { user, onLogout } = useAuth();
+    const { bgColor, text } = useMemo(() => stringAvatar(user?.user_fullname || 'Test User'), [user?.user_fullname]);
+
+    const accountAvatarRef = useRef<HTMLDivElement | null>(null);
+    const [showAccountMenu, setShowAccountMenu] = useState(false);
+    function closeAccountMenu() {
+        setShowAccountMenu(false);
+    }
+    function openAccountMenu() {
+        setShowAccountMenu(true);
+    }
 
     return (
         <Box
@@ -20,15 +36,45 @@ export const Header = () => {
                     Foodly Admin
                 </Link>
             </Typography>
-            <Avatar
-                sx={{
-                    bgcolor: bgColor,
-                    color: colors.white
-                }}
-                color={colors.white}
-            >
-                {text}
-            </Avatar>
+            {
+                user && (
+                    <Fragment>
+                        <Tooltip title={user.user_fullname}>
+                            <Avatar
+                                onClick={openAccountMenu}
+                                ref={accountAvatarRef}
+                                sx={{
+                                    bgcolor: bgColor,
+                                    color: colors.white
+                                }}
+                            >
+                                {text}
+                            </Avatar>
+                        </Tooltip>
+                        <Menu
+                            PaperProps={{
+                                sx: {
+                                    bgcolor: colors.clay[950]
+                                }
+                            }}
+                            open={showAccountMenu}
+                            anchorEl={accountAvatarRef.current}
+                            onClose={closeAccountMenu}
+                            onClick={closeAccountMenu}
+                        >
+                            <MenuItem sx={{ fontSize: 18 }}>
+                                <Link href={'/account'}>
+                                    Account
+                                </Link>
+                            </MenuItem>
+                            <MenuItem onClick={onLogout} sx={{ fontSize: 18 }}>
+                                <LogoutRounded fontSize={'small'} sx={{marginRight: '2px'}} />
+                                Logout
+                            </MenuItem>
+                        </Menu>
+                    </Fragment>
+                )
+            }
         </Box>
     );
 };

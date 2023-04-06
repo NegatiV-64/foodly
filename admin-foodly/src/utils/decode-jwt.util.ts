@@ -1,4 +1,4 @@
-import { checkEnvironment } from "@/utils/check-enviroment.util";
+import { checkEnvironment } from '@/utils/check-enviroment.util';
 
 export const decodeJwt = <TokenData = unknown>(token: string): TokenData | null => {
     if (token === undefined) {

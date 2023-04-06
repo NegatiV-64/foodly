@@ -8,7 +8,7 @@ import { CacheProvider } from '@emotion/react';
 import { createEmotionCache } from '@/utils/create-emotion-cache.util';
 import { theme } from '@/styles/theme';
 import { DisplayServerError } from '@/components/utility/DisplayServerError';
-import { Layout } from '@/layout/Layout';
+import { AuthProvider } from '@/contexts/auth/auth.context';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -44,9 +44,9 @@ const MyApp = (props: MyAppProps) => {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Layout>
+        <AuthProvider>
           <Component {...pageProps} />
-        </Layout>
+        </AuthProvider>
       </ThemeProvider>
     </CacheProvider>
   );
