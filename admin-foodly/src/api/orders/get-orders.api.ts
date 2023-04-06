@@ -3,11 +3,11 @@ import type { Order } from '@/interfaces/order.interface';
 import { fetchHandler } from '@/utils/fetch-handler.util';
 import type { GetServerSidePropsContext } from 'next';
 
-export const getOrders = async ({ order = 'asc', page = 1, sort = 'order_created_at', user = '', }: GetOrdersQueryParams, context: GetServerSidePropsContext) => {
+export const getOrders = async ({ order = 'asc', page = 1, createdAt = '', sort = 'order_created_at', user = '', }: GetOrdersQueryParams, context: GetServerSidePropsContext) => {
     const skip = amountToDisplay * (page - 1);
 
     const response = await fetchHandler<GetOrdersResponse>(
-        `/orders?take=${amountToDisplay}&skip=${skip}&user=${user}&sort=${sort}&order=${order}`,
+        `/orders?take=${amountToDisplay}&skip=${skip}&user=${user}&sort=${sort}&order=${order}&created_at=${createdAt}`,
         {
             method: 'GET',
         },
@@ -24,6 +24,7 @@ export interface GetOrdersQueryParams {
     user?: string;
     sort?: 'order_id' | 'order_price' | 'order_status' | 'order_created_at';
     order?: 'asc' | 'desc';
+    createdAt?: string;
 }
 
 export interface GetOrdersResponse {

@@ -1,7 +1,7 @@
 import { fetchHandler } from '@/utils/fetch-handler.util';
 
 export async function login(body: LoginBody) {
-    const response = await fetchHandler(
+    const response = await fetchHandler<LoginResponse>(
         '/auth/login/employee',
         {
             method: 'POST',

@@ -6,8 +6,8 @@ import type { GetServerSidePropsContext } from 'next';
 export const getDeliveries = async ({ order = 'asc', page = 1, sort = 'delivery_created_at', createdAt = '', customerId, status }: GetDeliveriesQueryParams, context: GetServerSidePropsContext) => {
     const skip = amountToDisplay * (page - 1);
 
-    const response = await fetchHandler(
-        `/deliveries?take=${amountToDisplay}&skip=${skip}&customer_id=${customerId ?? ''}&createdAt=${createdAt}&status=${status ?? ''}&sort=${sort}&order=${order}`,
+    const response = await fetchHandler<GetDeliveriesResponse>(
+        `/deliveries?take=${amountToDisplay}&skip=${skip}&customer_id=${customerId ?? ''}&created_at=${createdAt}&status=${status ?? ''}&sort=${sort}&order=${order}`,
         {
             method: 'GET',
         },
