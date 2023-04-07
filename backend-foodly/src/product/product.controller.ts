@@ -13,6 +13,7 @@ import { ValidateImage, ValidateProductSortQueryPipe } from './pipes';
 import { ProductService } from './product.service';
 import { CreateProductResponse, GetProductsResponse, PopularProductsResponse, GetProductResponse, UpdateProductResponse } from './responses';
 import { createProductSchema, updateProductSchema } from './schemas';
+import { ParseOptionalStringPipe } from 'src/shared/pipe/parse-optional-string.pipe';
 
 @ApiTags('Product')
 @Controller('products')
@@ -82,8 +83,8 @@ export class ProductController {
     public async getProducts(
         @Query('take', ParseOptionalIntPipe) take?: number,
         @Query('skip', ParseOptionalIntPipe) skip?: number,
-        @Query('category') categorySlug?: string,
-        @Query('search') search?: string,
+        @Query('category', ParseOptionalStringPipe) categorySlug?: string,
+        @Query('search', ParseOptionalStringPipe) search?: string,
         @Query('sort', ValidateProductSortQueryPipe) sort?: ProductSortQuery,
         @Query('order', ValidateOrderByQueryPipe) order?: OrderByQuery,
     ) {
