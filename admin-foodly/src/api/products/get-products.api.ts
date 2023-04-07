@@ -15,15 +15,15 @@ export const getProducts = async ({ page = 1, category, order = 'asc', search = 
     return response;
 };
 
-interface GetProductsQueryParams {
+export interface GetProductsQueryParams {
     page?: number;
-    category?: number;
+    category?: string;
     search?: string;
     sort?: 'product_id' | 'product_name' | 'product_price' | 'category_name' | 'category_id';
     order?: 'asc' | 'desc';
 }
 
-interface GetProductsResponse {
+export interface GetProductsResponse {
     total: number;
     products: Product[];
 }

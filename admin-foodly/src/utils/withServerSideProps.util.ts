@@ -5,7 +5,8 @@ import { fetchHandler } from './fetch-handler.util';
 import { decodeJwt } from './decode-jwt.util';
 import type { AccessTokenData } from '@/interfaces/auth.interface';
 
-export type WithServerSideProps<Props extends GetServerSidePropsGeneric> = ReturnType<typeof withServerSideProps<Props>>;
+export type WithServerSideProps<Props extends GetServerSidePropsGeneric = GetServerSidePropsGeneric> = ReturnType<typeof withServerSideProps<Props>>;
+
 
 export const withServerSideProps = <Props extends GetServerSidePropsGeneric>(
     getServerSideProps: GetServerSideProps<Props>
@@ -16,13 +17,6 @@ export const withServerSideProps = <Props extends GetServerSidePropsGeneric>(
                 req: context.req,
                 res: context.res,
             });
-
-            console.log(
-                'access_token',
-                access_token,
-                'refresh_token',
-                refresh_token
-            );
 
             if (access_token === undefined && refresh_token === undefined) {
                 return {

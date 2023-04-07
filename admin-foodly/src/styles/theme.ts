@@ -363,6 +363,16 @@ export const theme = createTheme({
     },
   },
   components: {
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          // Make the required asterisk red
+          '&.Mui-required .MuiFormLabel-asterisk': {
+            color: colors.red[500],
+          }
+        }
+      }
+    },
     MuiTextField: {
       styleOverrides: {
         root: {
@@ -401,6 +411,34 @@ export const theme = createTheme({
           color: colors.white,
         }
       }
-    }
+    },
+    MuiPaginationItem: {
+      styleOverrides: {
+        root: {
+          color: colors.white,
+          '&.Mui-selected': {
+            backgroundColor: colors.forest[600],
+            color: colors.white,
+            '&:hover': {
+              backgroundColor: colors.forest[700],
+              color: colors.white,
+            }
+          },
+          '&:hover': {
+            // some greish color
+            backgroundColor: colors.gray[200],
+            color: colors.black,
+          },
+          // Styles for previous and next buttons
+          '&.MuiPaginationItem-previousNext': {
+            color: colors.white,
+            '&:hover': {
+              backgroundColor: colors.gray[200],
+              color: colors.black,
+            }
+          }
+        }
+      }
+    },
   }
 });
