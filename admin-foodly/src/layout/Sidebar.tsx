@@ -9,8 +9,19 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import PeopleIcon from '@mui/icons-material/People';
 import { colors } from '@/styles/theme';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export const Sidebar: FC = () => {
+    const { pathname } = useRouter();
+
+    const isActiveLink = (link: string) => {
+        if (link === '/') {
+            return pathname === link;
+        }
+
+        return pathname.includes(link);
+    };
+
     return (
         <Box component={'aside'} bgcolor={colors.slate[900]} minHeight={'100%'} py={2} px={2}>
             <Box
@@ -33,9 +44,9 @@ export const Sidebar: FC = () => {
                                 alignItems={'center'}
                                 columnGap={1}
                                 fontSize={17}
-                                color={colors.gray[400]}
                                 sx={{
                                     transition: 'color 0.2s ease-in-out',
+                                    color: isActiveLink(item.link) ? colors.white : colors.gray[400],
                                     '&:hover': {
                                         color: colors.white,
                                     }
