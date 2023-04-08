@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/shared/decorators';
 import { AccessTokenGuard } from 'src/shared/guards';
@@ -67,7 +67,7 @@ export class CategoryController {
     @UseGuards(AccessTokenGuard)
     public async updateCategory(
         @GetCurrentUser('user_id') userId: number,
-        @Param('category_id') categoryId: number,
+        @Param('category_id', ParseIntPipe) categoryId: number,
         @Body() dto: UpdateCategoryDto,
     ) {
         const updatedCategory = await this.categoryService.updateCategory(userId, categoryId, dto);
@@ -119,7 +119,7 @@ export class CategoryController {
     @UseGuards(AccessTokenGuard)
     public async deleteCategory(
         @GetCurrentUser('user_id') userId: number,
-        @Param('category_id') categoryId: number,
+        @Param('category_id', ParseIntPipe) categoryId: number,
     ) {
         await this.categoryService.deleteCategory(userId, categoryId);
 
