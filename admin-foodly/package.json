@@ -9,7 +9,8 @@
     "lint": "npx eslint src --ext .ts,.tsx",
     "lint:fix": "npx eslint src --ext .ts,.tsx --fix",
     "server": "cd .. && cd backend-foodly && npm run dev",
-    "database" : "cd .. && cd backend-foodly && npm run studio"
+    "database" : "cd .. && cd backend-foodly && npm run studio",
+    "frontend": "cd .. && cd frontend-foodly && npm run dev"
   },
   "dependencies": {
     "@emotion/cache": "^11.10.5",

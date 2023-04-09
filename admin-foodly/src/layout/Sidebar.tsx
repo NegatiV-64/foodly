@@ -7,6 +7,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import PeopleIcon from '@mui/icons-material/People';
+import BadgeIcon from '@mui/icons-material/Badge';
 import { colors } from '@/styles/theme';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -98,6 +99,11 @@ const menuItems = [
         link: '/customers',
     },
     {
+        label: 'Employees',
+        icon: <BadgeIcon />,
+        link: '/employees',
+    },
+    {
         label: 'Deliveries',
         icon: <DeliveryDiningIcon />,
         link: '/deliveries',
@@ -106,5 +112,5 @@ const menuItems = [
         label: 'Payments',
         icon: <ReceiptIcon />,
         link: '/payments',
-    }
+    },
 ];

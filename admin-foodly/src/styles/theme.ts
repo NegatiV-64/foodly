@@ -344,9 +344,11 @@ export const theme = createTheme({
       color: colors.white,
     },
     h1: {
+      fontWeight: 'bold',
       fontSize: 40,
     },
     h2: {
+      fontWeight: 'bold',
       fontSize: 32,
     },
     h3: {
@@ -405,11 +407,48 @@ export const theme = createTheme({
         }
       ]
     },
+    MuiTableContainer: {
+      styleOverrides: {
+        root: {
+          backgroundColor: colors.gray[900],
+          borderRadius: '16px',
+          paddingLeft: '24px',
+          paddingRight: '24px',
+          paddingTop: '30px',
+          paddingBottom: '30px',
+        }
+      },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: colors.gray[800],
+          border: 0,
+        }
+      }
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            backgroundColor: colors.slate[800],
+            transition: 'background-color 0.1s',
+          }
+        }
+      }
+    },
     MuiTableCell: {
       styleOverrides: {
         root: {
           color: colors.white,
+          borderBottomColor: colors.gray[400],
+          '&.MuiTableCell-head': {
+            border: 0,
+          }
         }
+      },
+      defaultProps: {
+        align: 'center',
       }
     },
     MuiPaginationItem: {

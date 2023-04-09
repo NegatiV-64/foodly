@@ -18,7 +18,10 @@ export const withServerSideProps = <Props extends GetServerSidePropsGeneric>(
                 res: context.res,
             });
 
+
             if (access_token === undefined && refresh_token === undefined) {
+                console.log('No tokens found, redirecting to login page')
+
                 return {
                     redirect: {
                         destination: '/login',
@@ -29,6 +32,9 @@ export const withServerSideProps = <Props extends GetServerSidePropsGeneric>(
 
             // If access token is expired, but refresh token is not, then refresh the access token
             if (access_token === undefined && refresh_token !== undefined) {
+                console.log('Access token is expired, refreshing tokens')
+                console.log('Refresh token:', refresh_token)
+
                 const response = await fetchHandler<{
                     access_token: string;
                     refresh_token: string;
@@ -42,6 +48,8 @@ export const withServerSideProps = <Props extends GetServerSidePropsGeneric>(
                     },
                     false
                 );
+
+                console.log('Refresh token response:', response)
 
                 if (response.ok === false || response.data === null) {
                     console.error('Failed to refresh tokens', response.code, response.data, response.error);
@@ -75,6 +83,8 @@ export const withServerSideProps = <Props extends GetServerSidePropsGeneric>(
                     res: context.res,
                     expires: new Date(refreshTokenData.exp * 1000),
                 });
+
+                return await getServerSideProps(context);
             }
 
             return await getServerSideProps(context);

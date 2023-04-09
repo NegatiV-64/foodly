@@ -193,7 +193,7 @@ async function refrehTokenHandler(token: string, context?: GetServerSidePropsCon
     if (jwtRefreshData === null) {
         throw new FetchError(401, 'Jwt parse failed!');
     }
-    setCookie('refreshToken', refreshToken, {
+    setCookie('refresh_token', refreshToken, {
         expires: new Date(jwtRefreshData.exp * 1000),
         req: context?.req,
         res: context?.res,
