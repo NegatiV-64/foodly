@@ -1,13 +1,14 @@
-import type { User, UserType } from '@/interfaces/user.interface';
+import { amountToDisplay } from '@/config/pagination.config';
+import type { User } from '@/interfaces/user.interface';
 import { fetchHandler } from '@/utils/fetch-handler.util';
 import type { GetServerSidePropsContext } from 'next';
 
-export async function getEmployees({ order = 'asc', page = 1, sort = 'user_id', type }: GetEmployeesQueryParams, context: GetServerSidePropsContext) {
-    const take = 20;
-    const skip = take * (page - 1);
+export async function getEmployees({ order = 'desc', page, sort = 'user_id', type }: GetEmployeesQueryParams, context: GetServerSidePropsContext) {
+    const skip = page ? (page - 1) * 10 : null;
+    const take = page ? amountToDisplay : null;
 
     const response = await fetchHandler<GetEmployeesResponse>(
-        `/employees?take=${take}&skip=${skip}&type=${type ?? ''}&order=${order}&sort=${sort}`,
+        `/users?role=${type ?? ''}&take=${take ?? ''}&skip=${skip ?? ''}&order=${order}&sort=${sort}`,
         {
             method: 'GET',
         },
@@ -21,12 +22,18 @@ export async function getEmployees({ order = 'asc', page = 1, sort = 'user_id', 
 
 export interface GetEmployeesQueryParams {
     page?: number;
-    type?: UserType;
+    search: string;
+    type?: EmployeeTypeValue;
     order?: 'asc' | 'desc';
-    sort?: 'user_id' | 'user_firstname' | 'user_lastname' | 'user_email' | 'user_type';
+    sort?: EmployeeSortValue;
 }
+
+export const employeeSortValues = ['user_id', 'user_firstname', 'user_lastname', 'user_email', 'user_type'];
+export type EmployeeSortValue = typeof employeeSortValues[number];
+export const employeeTypeValues = ['admin', 'manager', 'delivery_boy'];
+export type EmployeeTypeValue = typeof employeeTypeValues[number];
 
 export interface GetEmployeesResponse {
     total: number;
-    employees: User[];
+    users: User[];
 }
