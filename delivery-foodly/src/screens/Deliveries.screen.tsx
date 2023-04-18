@@ -1,10 +1,11 @@
 import type { FC } from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, Text } from 'react-native';
 import type { DeliveriesScreenProps } from './types';
+import { Screen } from '../components/utility/Screen';
 
 export const DeliveriesScreen: FC<DeliveriesScreenProps> = ({ navigation }) => {
     return (
-        <View>
+        <Screen>
             <Text>
                 Deliveries
             </Text>
@@ -14,6 +15,6 @@ export const DeliveriesScreen: FC<DeliveriesScreenProps> = ({ navigation }) => {
                     deliveryId: 'some uuid',
                 })}
             />
-        </View>
+        </Screen>
     );
 };

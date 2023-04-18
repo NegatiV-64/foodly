@@ -1,12 +1,13 @@
 import type { FC } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import { Screen } from '../components/utility/Screen';
 
 export const ProfileScreen: FC = () => {
     return (
-        <View>
+        <Screen>
             <Text>
                 Profile
             </Text>
-        </View>
+        </Screen>
     );
 };

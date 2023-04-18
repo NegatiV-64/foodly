@@ -1,12 +1,13 @@
 import type { FC } from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, Text } from 'react-native';
 import type { DeliveryScreenProps } from './types';
+import { Screen } from '../components/utility/Screen';
 
 export const DeliveryScreen:FC<DeliveryScreenProps> = ({
     navigation,
 }) => {
     return (
-        <View>
+        <Screen hasSafeArea={false}>
             <Text>
                 Delivery
             </Text>
@@ -14,6 +15,6 @@ export const DeliveryScreen:FC<DeliveryScreenProps> = ({
                 title="Go to Deliveries"
                 onPress={() => navigation.goBack()}
             />
-        </View>
+        </Screen>
     );
 };

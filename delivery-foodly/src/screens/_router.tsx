@@ -6,11 +6,18 @@ import { DeliveryScreen } from './Delivery.screen';
 import { ProfileScreen } from './Profile.screen';
 import { LoginScreen } from './Login.screen';
 import type { RootStackParamList, TabParamList } from './types';
+import { useAuth } from '../contexts/auth';
+import { Fragment } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const TabsNavigator = () => {
     return (
-        <Tab.Navigator>
+        <Tab.Navigator
+            screenOptions={{
+                headerShown: false,
+            }}
+        >
             <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen name="Deliveries" component={DeliveriesScreen} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
@@ -20,11 +27,32 @@ const TabsNavigator = () => {
 
 const RootStack = createStackNavigator<RootStackParamList>();
 const RootStackNavigator = () => {
+    const { status } = useAuth();
+
     return (
         <RootStack.Navigator>
-            <RootStack.Screen name="Login" component={LoginScreen} />
-            <RootStack.Screen name="Tabs" component={TabsNavigator} />
-            <RootStack.Screen name="Delivery" component={DeliveryScreen} />
+            {
+                status === 'anonymous'
+                    ?
+                    <RootStack.Screen
+                        options={{
+                            headerShown: false,
+                        }}
+                        name="Login"
+                        component={LoginScreen}
+                    />
+                    :
+                    <Fragment>
+                        <RootStack.Screen
+                            options={{
+                                headerShown: false,
+                            }}
+                            name="Tabs"
+                            component={TabsNavigator}
+                        />
+                        <RootStack.Screen name="Delivery" component={DeliveryScreen} />
+                    </Fragment>
+            }
         </RootStack.Navigator>
     );
 };
@@ -32,6 +60,8 @@ const RootStackNavigator = () => {
 
 export const Router = (): JSX.Element => {
     return (
-        <RootStackNavigator />
+        <SafeAreaProvider>
+            <RootStackNavigator />
+        </SafeAreaProvider>
     );
 };
