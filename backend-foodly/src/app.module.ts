@@ -14,6 +14,7 @@ import { cwd } from 'process';
 import { OrderModule } from './order/order.module';
 import { DeliveryModule } from './delivery/delivery.module';
 import { PaymentModule } from './payment/payment.module';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PaymentModule } from './payment/payment.module';
     OrderModule,
     DeliveryModule,
     PaymentModule,
+    GatewayModule,
   ],
   controllers: [],
   providers: [],
