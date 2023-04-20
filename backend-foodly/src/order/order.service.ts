@@ -71,7 +71,7 @@ export class OrderService {
         return orderWithProducts;
     }
 
-    public async getOrders(userId: number, { created, order = 'asc', skip, sort = 'order_created_at', take, userSearch }: GetOrdersQueryParams): Promise<GetOrdersReturnType> {
+    public async getOrders(userId: number, { hasDelivery, status, created, order = 'asc', skip, sort = 'order_created_at', take, userSearch }: GetOrdersQueryParams): Promise<GetOrdersReturnType> {
         // Checking user
         const user = await this.prisma.user.findUnique({
             where: {
@@ -92,6 +92,36 @@ export class OrderService {
 
         const orderCreateAtQuery = created ? new Date(created) : undefined;
 
+        const orderWhereQuery: Prisma.OrderWhereInput = {
+            order_created_at: orderCreateAtQuery ? {
+                gte: orderCreateAtQuery,
+            } : undefined,
+            order_status: status,
+            order_user_id: isUserEmployee ? undefined : userId,
+            user: isUserEmployee ? {
+                user_firstname: userSearch ? {
+                    contains: userSearch?.split(' ')[0],
+                    mode: 'insensitive',
+                } : undefined,
+                user_lastname: userSearch ? {
+                    contains: userSearch?.split(' ')[1],
+                    mode: 'insensitive',
+                } : undefined,
+            } : undefined,
+        };
+
+        if (hasDelivery !== undefined) {
+            if (hasDelivery === true) {
+                orderWhereQuery.order_delivery_id = {
+                    not: null,
+                };
+            }
+
+            if (hasDelivery === false) {
+                orderWhereQuery.order_delivery_id = null;
+            }
+        }
+
         if (isUserEmployee === false) {
             const [orders, total] = await this.prisma.$transaction([
                 this.prisma.order.findMany({
@@ -99,7 +129,8 @@ export class OrderService {
                         order_user_id: userId,
                         order_created_at: {
                             gte: orderCreateAtQuery,
-                        }
+                        },
+                        order_status: status,
                     },
                     take: take,
                     skip: skip,
@@ -108,12 +139,7 @@ export class OrderService {
                     }
                 }),
                 this.prisma.order.count({
-                    where: {
-                        order_user_id: userId,
-                        order_created_at: {
-                            gte: orderCreateAtQuery,
-                        }
-                    }
+                    where: orderWhereQuery,
                 })
             ]);
 
@@ -124,27 +150,7 @@ export class OrderService {
 
         const [orders, total] = await this.prisma.$transaction([
             this.prisma.order.findMany({
-                where: {
-                    order_created_at: {
-                        gte: orderCreateAtQuery,
-                    },
-                    user: {
-                        OR: [
-                            {
-                                user_firstname: {
-                                    contains: userSearch,
-                                    mode: 'insensitive',
-                                },
-                            },
-                            {
-                                user_lastname: {
-                                    contains: userSearch,
-                                    mode: 'insensitive',
-                                },
-                            }
-                        ]
-                    },
-                },
+                where: orderWhereQuery,
                 take: take,
                 skip: skip,
                 orderBy: {
@@ -165,27 +171,7 @@ export class OrderService {
                 }
             }),
             this.prisma.order.count({
-                where: {
-                    order_created_at: {
-                        gte: orderCreateAtQuery,
-                    },
-                    user: {
-                        OR: [
-                            {
-                                user_firstname: {
-                                    contains: userSearch?.split(' ')[0],
-                                    mode: 'insensitive',
-                                },
-                            },
-                            {
-                                user_lastname: {
-                                    contains: userSearch?.split(' ')[1],
-                                    mode: 'insensitive',
-                                },
-                            }
-                        ]
-                    },
-                },
+                where: orderWhereQuery,
             })
         ]);
 

@@ -58,6 +58,8 @@ export interface GetOrdersQueryParams {
     created?: string;
     sort?: OrderSort;
     order?: OrderByQuery;
+    status?: OrderStatus;
+    hasDelivery?: boolean;
 }
 
 export interface CreateOrderReturnType {

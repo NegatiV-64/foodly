@@ -10,6 +10,9 @@ import { orderSortValues, OrderSort } from './interfaces';
 import { OrderService } from './order.service';
 import { ValidateOrderSortPipe } from './pipes/ValidateOrderSortPipe.pipe';
 import { CreateOrderResponse, GetOrderResponse, UpdateOrderStatusResponse } from './responses';
+import { OrderStatus } from '@prisma/client';
+import { ValidateOrderStatusPipe } from './pipes/ValidateOrderStatus.pipe';
+import { ValidateOrderDeliveryPipe } from './pipes/ValidateOrderDelivery.pipe';
 
 @ApiTags('Order')
 @Controller('orders')
@@ -64,6 +67,12 @@ export class OrderController {
         type: String,
     })
     @ApiQuery({
+        name: 'status',
+        required: false,
+        description: 'Search for orders by status. Example: "hold"',
+        enum: OrderStatus,
+    })
+    @ApiQuery({
         name: 'sort',
         required: false,
         enum: orderSortValues,
@@ -81,6 +90,8 @@ export class OrderController {
         @Query('user') userSearch?: string,
         @Query('created_at', ParseDateStringPipe) createdAt?: string,
         @Query('sort', ValidateOrderSortPipe) sort?: OrderSort,
+        @Query('status', ValidateOrderStatusPipe) status?: OrderStatus,
+        @Query('delivery', ValidateOrderDeliveryPipe) hasDelivery?: boolean,
         @Query('order', ValidateOrderByQueryPipe) order?: OrderByQuery,
     ) {
         const queryParams: GetOrdersQueryParams = {
@@ -90,6 +101,8 @@ export class OrderController {
             sort,
             take,
             userSearch,
+            status,
+            hasDelivery,
         };
 
         const { orders, total } = await this.orderService.getOrders(userId, queryParams);
