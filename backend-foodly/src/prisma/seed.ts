@@ -8,15 +8,15 @@ async function main() {
     await addManagerUser();
     await addDeliveryUser();
     await addCustomerUser();
-    // await addCategories();
-    // await addPizzaProducts();
-    // await addBurgerProducts();
-    // await addLongerProducts();
-    // await addDrinksProducts();
-    // await addHotDogProducts();
-    // await addSandwitchProducts();
-    // await addSaladProducts();
-    // await addSnacksProducts();
+    await addCategories();
+//     await addPizzaProducts();
+//     await addBurgerProducts();
+//     await addHotDogProducts();
+//     await addSandwitchProducts();
+//     await addSaladProducts();
+//     await addDrinksProducts();
+//     await addSnacksProducts();
+//     await addLongerProducts();
 }
 
 main()
@@ -253,7 +253,7 @@ async function addPizzaProducts() {
         product_description: pizza.product_description,
         product_name: pizza.product_name,
         product_image: pizza.product_image,
-        product_category_id: 3
+        product_category_id: 1
     }));
 
     await prisma.product.createMany({
@@ -323,7 +323,241 @@ async function addBurgerProducts() {
     await prisma.product.createMany({
         data: burgers.map((burger) => ({
             ...burger,
+            product_category_id: 2,
+        })),
+    });
+}
+
+async function addHotDogProducts() {
+    type HotDog = {
+        product_name: string;
+        product_description: string;
+        product_price: number;
+        product_image: string;
+    };
+
+    const hotdogs: HotDog[] = [
+        {
+            product_name: 'Hot Dog Classic',
+            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions',
+            product_image: 'uploads/products/hot-dog-classic.png',
+            product_price: 11000
+        },
+        {
+            product_name: 'Hot Dog Cheese',
+            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese',
+            product_image: 'uploads/products/hot-dog-cheese.png',
+            product_price: 12000
+        },
+        {
+            product_name: 'Hot Dog Xalapeno',
+            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese, xalapeno',
+            product_image: 'uploads/products/hot-dog-xalapeno.png',
+            product_price: 15000
+        },
+        {
+            product_name: 'Hot Dog King',
+            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese, xalapeno, bacon',
+            product_image: 'uploads/products/hot-dog-king.png',
+            product_price: 20000
+        }
+    ];
+
+    await prisma.product.createMany({
+        data: hotdogs.map((hotdog) => ({
+            ...hotdog,
+            product_category_id: 3,
+        })),
+    });
+}
+
+async function addSandwitchProducts() {
+    type Sandwitch = {
+        product_name: string;
+        product_description: string;
+        product_price: number;
+        product_image: string;
+    };
+
+    const sandwitches: Sandwitch[] = [
+        {
+            product_name: 'Sandwitch Classic',
+            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions',
+            product_image: 'uploads/products/sandwitch-classic.png',
+            product_price: 27000
+        },
+        {
+            product_name: 'Sandwitch Cheese',
+            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese',
+            product_image: 'uploads/products/sandwitch-cheese.png',
+            product_price: 28000
+        },
+        {
+            product_name: 'Sandwitch Xalapeno',
+            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese, xalapeno',
+            product_image: 'uploads/products/sandwitch-xalapeno.png',
+            product_price: 31000
+        },
+        {
+            product_name: 'Sandwitch King',
+            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese, xalapeno, bacon',
+            product_image: 'uploads/products/sandwitch-king.png',
+            product_price: 32000
+        }
+    ];
+
+    await prisma.product.createMany({
+        data: sandwitches.map((sandwitch) => ({
+            ...sandwitch,
             product_category_id: 4,
+        })),
+    });
+
+}
+
+async function addSaladProducts() {
+    type Salad = {
+        product_name: string;
+        product_description: string;
+        product_price: number;
+        product_image: string;
+    };
+
+    const salads: Salad[] = [
+        {
+            product_name: 'Greek Salad',
+            product_description: 'Salad of juicy lettuce leaves, tomatoes, olives, fresh cucumbers and fetax cheese, seasoned with lemon sauce and basil sauce',
+            product_image: 'uploads/products/greek-salad.png',
+            product_price: 21000
+        },
+        {
+            product_name: 'Caesar Salad',
+            product_description: 'Salad of juicy lettuce leaves, tomatoes, olives, fresh cucumbers and fetax cheese, seasoned with lemon sauce and basil sauce',
+            product_image: 'uploads/products/caesar-salad.png',
+            product_price: 19000
+        },
+        {
+            product_name: 'Sezam Salad',
+            product_description: 'Salad of juicy lettuce leaves, tomatoes, olives, fresh cucumbers and fetax cheese, seasoned with lemon sauce and basil sauce',
+            product_image: 'uploads/products/sezam-salad.png',
+            product_price: 18000
+        },
+        {
+            product_name: 'Coulslaw Salad',
+            product_description: 'Salad of juicy lettuce leaves, tomatoes, olives, fresh cucumbers and fetax cheese, seasoned with lemon sauce and basil sauce',
+            product_image: 'uploads/products/coulslaw-salad.png',
+            product_price: 17000
+        }
+    ];
+
+    await prisma.product.createMany({
+        data: salads.map((salad) => ({
+            ...salad,
+            product_category_id: 5,
+        })),
+    });
+}
+
+async function addDrinksProducts() {
+    type Drink = {
+        product_name: string;
+        product_description: string;
+        product_price: number;
+        product_image: string;
+    };
+
+    const drinks: Drink[] = [
+        {
+            product_name: 'Coca-Cola 0.5L',
+            product_description: 'Coca-Cola bottle 0.5L. Good addition to any meal',
+            product_image: 'uploads/products/coca-cola-0.5l.png',
+            product_price: 7000
+        },
+        {
+            product_name: 'Fanta 0.5L',
+            product_description: 'Fanta bottle 0.5L. Good addition to any meal',
+            product_image: 'uploads/products/fanta-0.5l.png',
+            product_price: 7000
+        },
+        {
+            product_name: 'Sprite 0.5L',
+            product_description: 'Sprite bottle 0.5L. Good addition to any meal',
+            product_image: 'uploads/products/sprite-0.5l.png',
+            product_price: 7000
+        },
+        {
+            product_name: 'Mohito',
+            product_description: 'Natural, ice-cold drink with lemon and mint. Good addition to any meal',
+            product_image: 'uploads/products/mohito.png',
+            product_price: 15000
+        },
+        {
+            product_name: 'Ice Tea',
+            product_description: 'Natural, ice-cold drink with lemon and mint. Good addition to any meal',
+            product_image: 'uploads/products/ice-tea.png',
+            product_price: 15000
+        },
+        {
+            product_name: 'Ice Coffee Milk',
+            product_description: 'Natural, ice-cold drink with coffee and milk. Good addition to any meal',
+            product_image: 'uploads/products/ice-coffee-milk.png',
+            product_price: 16000
+        },
+        {
+            product_name: 'Ice Coffee Black',
+            product_description: 'Natural, ice-cold drink with coffee and dark beans. Good addition to any meal',
+            product_image: 'uploads/products/ice-coffee-black.png',
+            product_price: 16000
+        }
+    ];
+
+    await prisma.product.createMany({
+        data: drinks.map((drink) => ({
+            ...drink,
+            product_category_id: 6,
+        })),
+    });
+}
+
+async function addSnacksProducts() {
+    type Snack = {
+        product_name: string;
+        product_description: string;
+        product_price: number;
+        product_image: string;
+    };
+
+    const snacks: Snack[] = [
+        {
+            product_name: 'French Fries',
+            product_description: 'French fries with ketchup',
+            product_image: 'uploads/products/french-fries.png',
+            product_price: 10000
+        },
+        {
+            product_name: 'Chicken Wings',
+            product_description: 'Chicken wings with ketchup. 5 pieces',
+            product_image: 'uploads/products/chicken-wings.png',
+            product_price: 15000
+        },
+        {
+            product_name: 'Xalapeno Snacks',
+            product_description: 'Xalapeno snacks. Go well with any meal. 4 pieces',
+            product_image: 'uploads/products/xalapeno-snacks.png',
+            product_price: 5000
+        },
+        {
+            product_name: 'Rustic Potatoes',
+            product_description: 'Rustic potatoes with ketchup',
+            product_image: 'uploads/products/rustic-potatoes.png',
+            product_price: 14000
+        }
+    ];
+
+    await prisma.product.createMany({
+        data: snacks.map((snack) => ({
+            ...snack,
+            product_category_id: 7,
         })),
     });
 }
@@ -390,241 +624,8 @@ async function addLongerProducts() {
     await prisma.product.createMany({
         data: longer.map((longer) => ({
             ...longer,
-            product_category_id: 10,
-        })),
-    });
-}
-
-async function addDrinksProducts() {
-    type Drink = {
-        product_name: string;
-        product_description: string;
-        product_price: number;
-        product_image: string;
-    };
-
-    const drinks: Drink[] = [
-        {
-            product_name: 'Coca-Cola 0.5L',
-            product_description: 'Coca-Cola bottle 0.5L. Good addition to any meal',
-            product_image: 'uploads/products/coca-cola-0.5l.png',
-            product_price: 7000
-        },
-        {
-            product_name: 'Fanta 0.5L',
-            product_description: 'Fanta bottle 0.5L. Good addition to any meal',
-            product_image: 'uploads/products/fanta-0.5l.png',
-            product_price: 7000
-        },
-        {
-            product_name: 'Sprite 0.5L',
-            product_description: 'Sprite bottle 0.5L. Good addition to any meal',
-            product_image: 'uploads/products/sprite-0.5l.png',
-            product_price: 7000
-        },
-        {
-            product_name: 'Mohito',
-            product_description: 'Natural, ice-cold drink with lemon and mint. Good addition to any meal',
-            product_image: 'uploads/products/mohito.png',
-            product_price: 15000
-        },
-        {
-            product_name: 'Ice Tea',
-            product_description: 'Natural, ice-cold drink with lemon and mint. Good addition to any meal',
-            product_image: 'uploads/products/ice-tea.png',
-            product_price: 15000
-        },
-        {
-            product_name: 'Ice Coffee Milk',
-            product_description: 'Natural, ice-cold drink with coffee and milk. Good addition to any meal',
-            product_image: 'uploads/products/ice-coffee-milk.png',
-            product_price: 16000
-        },
-        {
-            product_name: 'Ice Coffee Black',
-            product_description: 'Natural, ice-cold drink with coffee and dark beans. Good addition to any meal',
-            product_image: 'uploads/products/ice-coffee-black.png',
-            product_price: 16000
-        }
-    ];
-
-    await prisma.product.createMany({
-        data: drinks.map((drink) => ({
-            ...drink,
             product_category_id: 8,
         })),
     });
 }
 
-async function addHotDogProducts() {
-    type HotDog = {
-        product_name: string;
-        product_description: string;
-        product_price: number;
-        product_image: string;
-    };
-
-    const hotdogs: HotDog[] = [
-        {
-            product_name: 'Hot Dog Classic',
-            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions',
-            product_image: 'uploads/products/hot-dog-classic.png',
-            product_price: 11000
-        },
-        {
-            product_name: 'Hot Dog Cheese',
-            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese',
-            product_image: 'uploads/products/hot-dog-cheese.png',
-            product_price: 12000
-        },
-        {
-            product_name: 'Hot Dog Xalapeno',
-            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese, xalapeno',
-            product_image: 'uploads/products/hot-dog-xalapeno.png',
-            product_price: 15000
-        },
-        {
-            product_name: 'Hot Dog King',
-            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese, xalapeno, bacon',
-            product_image: 'uploads/products/hot-dog-king.png',
-            product_price: 20000
-        }
-    ];
-
-    await prisma.product.createMany({
-        data: hotdogs.map((hotdog) => ({
-            ...hotdog,
-            product_category_id: 5,
-        })),
-    });
-}
-
-async function addSandwitchProducts() {
-    type Sandwitch = {
-        product_name: string;
-        product_description: string;
-        product_price: number;
-        product_image: string;
-    };
-
-    const sandwitches: Sandwitch[] = [
-        {
-            product_name: 'Sandwitch Classic',
-            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions',
-            product_image: 'uploads/products/sandwitch-classic.png',
-            product_price: 27000
-        },
-        {
-            product_name: 'Sandwitch Cheese',
-            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese',
-            product_image: 'uploads/products/sandwitch-cheese.png',
-            product_price: 28000
-        },
-        {
-            product_name: 'Sandwitch Xalapeno',
-            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese, xalapeno',
-            product_image: 'uploads/products/sandwitch-xalapeno.png',
-            product_price: 31000
-        },
-        {
-            product_name: 'Sandwitch King',
-            product_description: 'Lush bun, sausage, ketchup, mayonnaise, squash caviar, cucumbers, tomatoes, onions, cheddar cheese, xalapeno, bacon',
-            product_image: 'uploads/products/sandwitch-king.png',
-            product_price: 32000
-        }
-    ];
-
-    await prisma.product.createMany({
-        data: sandwitches.map((sandwitch) => ({
-            ...sandwitch,
-            product_category_id: 6,
-        })),
-    });
-
-}
-
-async function addSaladProducts() {
-    type Salad = {
-        product_name: string;
-        product_description: string;
-        product_price: number;
-        product_image: string;
-    };
-
-    const salads: Salad[] = [
-        {
-            product_name: 'Greek Salad',
-            product_description: 'Salad of juicy lettuce leaves, tomatoes, olives, fresh cucumbers and fetax cheese, seasoned with lemon sauce and basil sauce',
-            product_image: 'uploads/products/greek-salad.png',
-            product_price: 21000
-        },
-        {
-            product_name: 'Caesar Salad',
-            product_description: 'Salad of juicy lettuce leaves, tomatoes, olives, fresh cucumbers and fetax cheese, seasoned with lemon sauce and basil sauce',
-            product_image: 'uploads/products/caesar-salad.png',
-            product_price: 19000
-        },
-        {
-            product_name: 'Sezam Salad',
-            product_description: 'Salad of juicy lettuce leaves, tomatoes, olives, fresh cucumbers and fetax cheese, seasoned with lemon sauce and basil sauce',
-            product_image: 'uploads/products/sezam-salad.png',
-            product_price: 18000
-        },
-        {
-            product_name: 'Coulslaw Salad',
-            product_description: 'Salad of juicy lettuce leaves, tomatoes, olives, fresh cucumbers and fetax cheese, seasoned with lemon sauce and basil sauce',
-            product_image: 'uploads/products/coulslaw-salad.png',
-            product_price: 17000
-        }
-    ];
-
-    await prisma.product.createMany({
-        data: salads.map((salad) => ({
-            ...salad,
-            product_category_id: 7,
-        })),
-    });
-}
-
-async function addSnacksProducts() {
-    type Snack = {
-        product_name: string;
-        product_description: string;
-        product_price: number;
-        product_image: string;
-    };
-
-    const snacks: Snack[] = [
-        {
-            product_name: 'French Fries',
-            product_description: 'French fries with ketchup',
-            product_image: 'uploads/products/french-fries.png',
-            product_price: 10000
-        },
-        {
-            product_name: 'Chicken Wings',
-            product_description: 'Chicken wings with ketchup. 5 pieces',
-            product_image: 'uploads/products/chicken-wings.png',
-            product_price: 15000
-        },
-        {
-            product_name: 'Xalapeno Snacks',
-            product_description: 'Xalapeno snacks. Go well with any meal. 4 pieces',
-            product_image: 'uploads/products/xalapeno-snacks.png',
-            product_price: 5000
-        },
-        {
-            product_name: 'Rustic Potatoes',
-            product_description: 'Rustic potatoes with ketchup',
-            product_image: 'uploads/products/rustic-potatoes.png',
-            product_price: 14000
-        }
-    ];
-
-    await prisma.product.createMany({
-        data: snacks.map((snack) => ({
-            ...snack,
-            product_category_id: 9,
-        })),
-    });
-}

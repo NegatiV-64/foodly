@@ -114,6 +114,7 @@ enum OrderStatus {
 enum DeliveryStatus {
   ON_WAY
   DONE
+  PENDING
   CANCELED
   FAILED
 }
