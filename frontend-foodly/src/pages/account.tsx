@@ -6,61 +6,36 @@ import { DialogBody } from '@/components/feedback/DialogBody';
 import { DialogFooter } from '@/components/feedback/DialogFooter';
 import { DialogHeader } from '@/components/feedback/DialogHeader';
 import { DialogTitle } from '@/components/feedback/DialogTitle';
+import { InputField } from '@/components/form/InputField';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
+import { Section } from '@/components/ui/Section';
 import { Text } from '@/components/ui/Text';
 import { Page } from '@/components/utility/Page';
 import { Protected } from '@/components/utility/Protected';
+import { ServerError } from '@/exceptions/server-error.exception';
 import { useDialog } from '@/hooks/useDialog.hook';
-import type { Account } from '@/interfaces/account.interface';
-import { cn } from '@/utils/cn.util';
-import { moneyFormat } from '@/utils/moneyFormat.util';
-import { parseDate } from '@/utils/parseDate.util';
+import type { Account } from '@/types/account.types';
+import { moneyFormat } from '@/utils/money-format.util';
+import { Time } from '@/utils/time.util';
+import { withServerSideProps } from '@/utils/with-server-side-props.util';
 import type { NextPage } from 'next';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HiOutlineSave } from 'react-icons/hi';
 
-const AccountPage: NextPage = () => {
-    // Form
+const AccountPage: NextPage<AccountPageProps> = ({ account }) => {
+    const [accountData, setAccountData] = useState<Account>(account);
+
+    // ==== Form ==== //
     const { register, handleSubmit } = useForm<AccountPageFormFields>();
 
-    // Dialogs
+    // ==== Dialogs ==== //
     const [showErrorDialog, openErrorDialog, closeErrorDialog] = useDialog(false);
     const [errorDialogMessage, setErrorDialogMessage] = useState<string>('');
     const [showSuccessDialog, openSuccessDialog, closeSuccessDialog] = useDialog(false);
 
-    // Fetch account data
-    const [accountData, setAccountData] = useState<Account | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<boolean>(false);
-    const fetchAccountData = useCallback(async () => {
-        setLoading(true);
-        try {
-            const { code, data, error: responseError, ok } = await getAccount();
-            if (ok === false || data === null) {
-                throw new Error(`${code}: ${JSON.stringify(responseError)}`);
-            }
-            setAccountData(data);
-        } catch (err) {
-            setError(true);
-            if (err instanceof Error) {
-                setErrorDialogMessage(err.message);
-            } else {
-                setErrorDialogMessage('An unknown error occurred while getting your account data');
-            }
-            openErrorDialog();
-        } finally {
-            setLoading(false);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    useEffect(() => {
-        fetchAccountData();
-    }, [fetchAccountData]);
-
-    // Update account data
     async function onUpdateAccountData(data: AccountPageFormFields) {
         const requestBody: UpdateAccountBody = {
             user_email: data.email,
@@ -86,10 +61,6 @@ const AccountPage: NextPage = () => {
 
         openSuccessDialog();
         setAccountData((prevData) => {
-            if (prevData === null) {
-                return null;
-            }
-
             return {
                 ...prevData,
                 user_email: response.user_email,
@@ -101,179 +72,123 @@ const AccountPage: NextPage = () => {
         });
     }
 
-    const styles = {
-        field: 'flex flex-col gap-y-1',
-        label: 'block text-sm font-medium text-stone-900',
-        required: 'text-red-500',
-        input: 'block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm'
-    };
-
     return (
         <Protected>
             <Page title='Viewing account'>
-                <section className='flex h-full grow flex-col py-7'>
-                    {
-                        loading === true && (
-                            <p>Loading...</p>
-                        )
-                    }
-                    {
-                        error === true && (
-                            <p>{error}</p>
-                        )
-                    }
-                    {
-                        accountData !== null && loading === false && error === false && (
-                            <Container className='grid grow grid-cols-2 flex-col gap-x-5 py-3'>
-                                <div>
-                                    <Heading>
-                                        Your account
-                                    </Heading>
-                                    <form
-                                        onSubmit={handleSubmit(onUpdateAccountData)}
-                                        className='mt-4 rounded-lg bg-white px-5 pt-2 pb-6'
-                                    >
-                                        <div className='mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4'>
-                                            <div className={styles.field}>
-                                                <label
-                                                    className={styles.label}
-                                                    htmlFor='first_name'
-                                                >
-                                                    First name
-                                                </label>
-                                                <input
-                                                    className={styles.input}
-                                                    type='text'
-                                                    id='first_name'
-                                                    {...register('first_name')}
-                                                    defaultValue={accountData.user_firstname ?? ''}
-                                                />
-                                            </div>
-                                            <div className={styles.field}>
-                                                <label
-                                                    className={styles.label}
-                                                    htmlFor='last_name'
-                                                >
-                                                    Last name
-                                                </label>
-                                                <input
-                                                    className={styles.input}
-                                                    type='text'
-                                                    id='last_name'
-                                                    {...register('last_name')}
-                                                    defaultValue={accountData.user_lastname ?? ''}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className={cn(styles.field, 'mt-3')}>
-                                            <label
-                                                className={styles.label}
-                                                htmlFor='email'
-                                            >
-                                                Email<span className={styles.required}>*</span>
-                                            </label>
-                                            <input
-                                                required={true}
-                                                className={styles.input}
-                                                type='email'
-                                                id='email'
-                                                {...register('email')}
-                                                defaultValue={accountData.user_email}
-                                            />
-                                        </div>
-                                        <div className={cn(styles.field, 'mt-3')}>
-                                            <label
-                                                className={styles.label}
-                                                htmlFor='phone'
-                                            >
-                                                Phone<span className={styles.required}>*</span>
-                                            </label>
-                                            <input
-                                                className={styles.input}
-                                                type='tel'
-                                                id='phone'
-                                                {...register('phone')}
-                                                name='phone'
-                                                defaultValue={accountData.user_phone}
-                                            />
-                                        </div>
-                                        <div className={cn(styles.field, 'mt-3')}>
-                                            <label
-                                                className={styles.label}
-                                                htmlFor='address'
-                                            >
-                                                Address
-                                            </label>
-                                            <input
-                                                {...register('address')}
-                                                className={styles.input}
-                                                type='text'
-                                                id='address'
-                                                name='address'
-                                                defaultValue={accountData.user_address ?? ''}
-                                            />
-                                        </div>
-                                        <Button
-                                            className='mt-4'
-                                            size={'small'}
-                                            startIcon={<HiOutlineSave />}
-                                            type='submit'
-                                        >
-                                            Update account
-                                        </Button>
-                                    </form>
+                <Section className='flex h-full grow flex-col'>
+                    <Container className='grid grow grid-cols-2 flex-col gap-x-5 py-3'>
+                        <div>
+                            <Heading>
+                                Your account
+                            </Heading>
+                            <form
+                                onSubmit={handleSubmit(onUpdateAccountData)}
+                                className='mt-4 flex flex-col gap-y-3 rounded-lg bg-white px-5 pt-2 pb-6'
+                            >
+                                <div className='mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4'>
+                                    <InputField
+                                        label='First name'
+                                        id='first_name'
+                                        type='text'
+                                        formFieldProps={{
+                                            hasSpacing: false
+                                        }}
+                                        defaultValue={accountData.user_firstname ?? ''}
+                                        {...register('first_name')}
+                                    />
+                                    <InputField
+                                        label='Last name'
+                                        formFieldProps={{
+                                            hasSpacing: false
+                                        }}
+                                        id='last_name'
+                                        type='text'
+                                        defaultValue={accountData.user_lastname ?? ''}
+                                        {...register('last_name')}
+                                    />
                                 </div>
-                                <div>
-                                    <Heading>
-                                        Your orders
-                                    </Heading>
-                                    <div className='mt-4 rounded-lg bg-white px-5 pt-2 pb-6'>
-                                        {
-                                            accountData.order.length > 0
-                                                ?
-                                                <table className='table-fixed'>
-                                                    {
-                                                        accountData.order.map((order, index) => (
-                                                            <tr className='border' key={order.order_id}>
-                                                                <td className='border-r py-1 px-2'>{index + 1}</td>
-                                                                <td className='border-r py-1 px-2'>{parseDate(order.order_created_at).format('DD/MM/YYYY HH:mm')}</td>
-                                                                <td className='border-r py-1 px-2'>{order.order_status}</td>
-                                                                <td className='py-1 px-2'>{moneyFormat(order.order_price)} soms</td>
-                                                            </tr>
-                                                        ))
-                                                    }
-                                                </table>
-                                                :
-                                                <p>You have no orders</p>
-                                        }
-                                    </div>
-                                    <Heading>
-                                        Your payments
-                                    </Heading>
-                                    <div className='mt-4 rounded-lg bg-white px-5 pt-2 pb-6'>
-                                        {
-                                            accountData.payment.length > 0
-                                                ?
-                                                <table className='table-fixed'>
-                                                    {
-                                                        accountData.payment.map((payment, index) => (
-                                                            <tr className='border' key={payment.payment_id}>
-                                                                <td className='border-r py-1 px-2'>{index + 1}</td>
-                                                                <td className='border-r py-1 px-2'>{parseDate(payment.payment_date).format('DD/MM/YYYY HH:mm')}</td>
-                                                                <td className='border-r py-1 px-2'>{payment.payment_type}</td>
-                                                            </tr>
-                                                        ))
-                                                    }
-                                                </table>
-                                                :
-                                                <p>You have no payments</p>
-                                        }
-                                    </div>
-                                </div>
-                            </Container>
-                        )
-                    }
-                </section>
+                                <InputField
+                                    label='Email'
+                                    id='email'
+                                    type='email'
+                                    required={true}
+                                    defaultValue={accountData.user_email}
+                                    {...register('email')}
+                                />
+                                <InputField
+                                    label='Phone'
+                                    id='phone'
+                                    required={true}
+                                    type='tel'
+                                    defaultValue={accountData.user_phone}
+                                    {...register('phone')}
+                                />
+                                <InputField
+                                    label='Address'
+                                    id='address'
+                                    type='text'
+                                    defaultValue={accountData.user_address ?? ''}
+                                    {...register('address')}
+                                />
+                                <Button
+                                    className='mt-4 w-fit'
+                                    size={'small'}
+                                    startIcon={<HiOutlineSave />}
+                                    type='submit'
+                                >
+                                    Update account
+                                </Button>
+                            </form>
+                        </div>
+                        <div>
+                            <Heading>
+                                Your orders
+                            </Heading>
+                            <div className='mt-4 rounded-lg bg-white px-5 pt-2 pb-6'>
+                                {
+                                    accountData.order.length > 0
+                                        ?
+                                        <table className='table-fixed'>
+                                            {
+                                                accountData.order.map((order, index) => (
+                                                    <tr className='border' key={order.order_id}>
+                                                        <td className='border-r py-1 px-2'>{index + 1}</td>
+                                                        <td className='border-r py-1 px-2'>{Time(order.order_created_at).format('DD/MM/YYYY HH:mm')}</td>
+                                                        <td className='border-r py-1 px-2'>{order.order_status}</td>
+                                                        <td className='py-1 px-2'>{moneyFormat(order.order_price)} soms</td>
+                                                    </tr>
+                                                ))
+                                            }
+                                        </table>
+                                        :
+                                        <p>You have no orders</p>
+                                }
+                            </div>
+                            <Heading>
+                                Your payments
+                            </Heading>
+                            <div className='mt-4 rounded-lg bg-white px-5 pt-2 pb-6'>
+                                {
+                                    accountData.payment.length > 0
+                                        ?
+                                        <table className='table-fixed'>
+                                            {
+                                                accountData.payment.map((payment, index) => (
+                                                    <tr className='border' key={payment.payment_id}>
+                                                        <td className='border-r py-1 px-2'>{index + 1}</td>
+                                                        <td className='border-r py-1 px-2'>{Time(payment.payment_date).format('DD/MM/YYYY HH:mm')}</td>
+                                                        <td className='border-r py-1 px-2'>{payment.payment_type}</td>
+                                                    </tr>
+                                                ))
+                                            }
+                                        </table>
+                                        :
+                                        <p>You have no payments</p>
+                                }
+                            </div>
+                        </div>
+                    </Container>
+                </Section>
                 <Dialog
                     open={showErrorDialog}
                     onClose={closeErrorDialog}
@@ -324,6 +239,24 @@ const AccountPage: NextPage = () => {
         </Protected>
     );
 };
+
+export const getServerSideProps = withServerSideProps<AccountPageProps>(async (context) => {
+    const account = await getAccount(context);
+
+    if (account.ok === false || account.data === null) {
+        throw new ServerError(account.code, 'Error happened while getting account data');
+    }
+
+    return {
+        props: {
+            account: account.data,
+        }
+    };
+});
+
+interface AccountPageProps {
+    account: Account;
+}
 
 interface AccountPageFormFields {
     first_name?: string;

@@ -1,4 +1,4 @@
-import { fetchHandler } from '@/utils/fetchHander.util';
+import { fetchHandler } from '@/utils/fetch-hander.util';
 
 export const signIn = async (body: SignInBody) => {
     const response = await fetchHandler<SignInResponse>(
@@ -7,7 +7,9 @@ export const signIn = async (body: SignInBody) => {
             method: 'POST',
             body: JSON.stringify(body),
         },
-        false
+        {
+            isAuth: false,
+        }
     );
 
     return response;

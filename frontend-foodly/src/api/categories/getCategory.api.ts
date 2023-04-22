@@ -1,5 +1,5 @@
-import type { Category } from '@/interfaces/category.interface';
-import { fetchHandler } from '@/utils/fetchHander.util';
+import type { Category } from '@/types/category.types';
+import { fetchHandler } from '@/utils/fetch-hander.util';
 
 export const getCategory = async (slug: string) => {
     const response = await fetchHandler<Category>(

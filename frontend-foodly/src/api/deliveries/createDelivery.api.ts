@@ -1,4 +1,4 @@
-import { fetchHandler } from '@/utils/fetchHander.util';
+import { fetchHandler } from '@/utils/fetch-hander.util';
 
 export const createDelivery = async (body: CreateDeliveryBody) => {
     const response = await fetchHandler(
@@ -7,7 +7,9 @@ export const createDelivery = async (body: CreateDeliveryBody) => {
             method: 'POST',
             body: JSON.stringify(body)
         },
-        true
+        {
+            isAuth: true
+        }
     );
 
     return response;

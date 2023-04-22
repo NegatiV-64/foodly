@@ -1,4 +1,4 @@
-import { fetchHandler } from '@/utils/fetchHander.util';
+import { fetchHandler } from '@/utils/fetch-hander.util';
 
 export const authRefresh = async (refreshToken: string) => {
     const response = await fetchHandler<AuthRefreshResponse>(
@@ -9,7 +9,9 @@ export const authRefresh = async (refreshToken: string) => {
                 'Authorization': `Bearer ${refreshToken}`,
             }
         },
-        false
+        {
+            isAuth: false,
+        }
     );
 
     return response;

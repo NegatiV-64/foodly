@@ -3,15 +3,18 @@ import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
 import { IconButton } from '@/components/ui/IconButton';
+import { Section } from '@/components/ui/Section';
 import { Text } from '@/components/ui/Text';
 import { Page } from '@/components/utility/Page';
 import { useCart } from '@/context/cart';
-import type { Product } from '@/interfaces/product.inteface';
-import { generateShimmer } from '@/utils/generateShimmer.util';
-import { getBackendFileUrl } from '@/utils/getBackendFileUrl.util';
-import { moneyFormat } from '@/utils/moneyFormat.util';
-import { validateDynamicUrlPart } from '@/utils/validateDynamicUrlPart.util';
-import type { GetServerSideProps, NextPage } from 'next';
+import { ServerError } from '@/exceptions/server-error.exception';
+import type { Product } from '@/types/product.types';
+import { generateShimmer } from '@/utils/generate-shimmer.util';
+import { getBackendFileUrl } from '@/utils/get-backend-file-url.util';
+import { moneyFormat } from '@/utils/money-format.util';
+import { validateQueryParam } from '@/utils/validate-query-param.util';
+import { withServerSideProps } from '@/utils/with-server-side-props.util';
+import type { NextPage } from 'next';
 import Image from 'next/image';
 import { useState } from 'react';
 import { HiMinus, HiOutlineShoppingCart, HiPlus } from 'react-icons/hi';
@@ -41,7 +44,7 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
 
     return (
         <Page title={`${product.product_name}`}>
-            <section className='py-10'>
+            <Section>
                 <Container className='grid grid-cols-2 justify-center gap-12'>
                     <Image
                         className='h-full w-[400px] justify-self-center rounded-lg object-contain'
@@ -76,7 +79,7 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
                         </Button>
                     </div>
                 </Container>
-            </section>
+            </Section>
         </Page>
     );
 };
@@ -86,22 +89,16 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
 // university project, I will use getServerSideProps. But, in a real
 // project, I suggest you to use getStaticProps. This is because page loading time
 // would be much faster than getServerSideProps.
-export const getServerSideProps: GetServerSideProps<ProductPageProps> = async (context) => {
-    const productId = validateDynamicUrlPart(context.params?.productId, 'number');
+export const getServerSideProps = withServerSideProps<ProductPageProps>(async (context) => {
+    const productId = validateQueryParam(context.params?.productId, 'number');
     if (productId === null) {
-        return {
-            notFound: true,
-        };
+        throw new ServerError(404, 'Product not found');
     }
 
-    const { ok, data } = await getProduct(productId);
+    const { ok, data, error, code } = await getProduct(productId);
 
     if (ok === false || data === null) {
-        // I know that this is not the best way to handle errors
-        // but I am lazy. So I will just return notFound. :)
-        return {
-            notFound: true,
-        };
+        throw new ServerError(code, `Error happened while retrieving product with id ${productId}. Information: ${error}`);
     }
 
     return {
@@ -109,7 +106,7 @@ export const getServerSideProps: GetServerSideProps<ProductPageProps> = async (c
             product: data,
         }
     };
-};
+});
 
 interface ProductPageProps {
     product: Product;

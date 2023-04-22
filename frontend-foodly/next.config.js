@@ -7,6 +7,9 @@ const nextConfig = {
     remotePatterns: [
       {
         hostname: 'localhost',
+      },
+      {
+        hostname: '127.0.0.1',
       }
     ]
   }

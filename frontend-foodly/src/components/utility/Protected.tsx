@@ -4,13 +4,14 @@ import { Fragment, useEffect } from 'react';
 import type { FC, ReactNode } from 'react';
 import { RoutesConfig } from '@/config/routes.config';
 import { getCookie } from 'cookies-next';
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/config/auth.config';
 
 export const Protected: FC<ProtectedProps> = ({ children }) => {
-    const accessToken = getCookie('access_token') as string || undefined;
-    const refreshToken = getCookie('refresh_token') as string || undefined;
+    const accessToken = getCookie(ACCESS_TOKEN_KEY) as string || undefined;
+    const refreshToken = getCookie(REFRESH_TOKEN_KEY) as string || undefined;
     const { replace } = useRouter();
     const { status } = useAuth();
-
+    
     useEffect(() => {
         if (status !== 'logged')  {
             if (accessToken === undefined || refreshToken === undefined) {

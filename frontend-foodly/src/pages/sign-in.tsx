@@ -1,4 +1,5 @@
 import { signIn } from '@/api/auth/sign-in.api';
+import { InputField } from '@/components/form/InputField';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
@@ -9,7 +10,6 @@ import { useForm } from 'react-hook-form';
 
 const SignInPage: NextPage = () => {
     const { register, handleSubmit } = useForm<SignInFormFields>();
-
     const { onLogin } = useAuth();
 
     async function onSignInSubmit(data: SignInFormFields) {
@@ -37,37 +37,20 @@ const SignInPage: NextPage = () => {
                         onSubmit={handleSubmit(onSignInSubmit)}
                         className='mt-4 w-full max-w-md space-y-6'
                     >
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                                Email address
-                            </label>
-                            <div className="mt-1">
-                                <input
-                                    id="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required={true}
-                                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder:text-gray-400 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
-                                    {...register('email', { required: true })}
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                Password
-                            </label>
-                            <div className="mt-1">
-                                <input
-                                    id="password"
-                                    type="password"
-                                    autoComplete="current-password"
-                                    required={true}
-                                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder:text-gray-400 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
-                                    {...register('password', { required: true, minLength: 5 })}
-                                />
-                            </div>
-                        </div>
+                        <InputField
+                            label='Email'
+                            type='email'
+                            autoComplete='email'
+                            required={true}
+                            {...register('email', { required: true })}
+                        />
+                        <InputField
+                            label='Password'
+                            type='password'
+                            autoComplete='current-password'
+                            required={true}
+                            {...register('password', { required: true, minLength: 5 })}
+                        />
                         <Button className='w-full' type='submit'>
                             Submit
                         </Button>

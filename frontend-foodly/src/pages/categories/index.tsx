@@ -2,15 +2,18 @@ import { getAllCategories } from '@/api/categories/getAllCategories.api';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
 import { Page } from '@/components/utility/Page';
-import type { CategoryList } from '@/interfaces/category.interface';
-import type { GetServerSideProps, NextPage } from 'next';
+import type { CategoryList } from '@/types/category.types';
+import type { NextPage } from 'next';
 import Link from 'next/link';
 import { RoutesConfig } from '@/config/routes.config';
+import { Section } from '@/components/ui/Section';
+import { withServerSideProps } from '@/utils/with-server-side-props.util';
+import { ServerError } from '@/exceptions/server-error.exception';
 
 const CategoriesPage: NextPage<CategoriesPageProps> = ({ categories }) => {
     return (
         <Page title='Food Categories'>
-            <section className='py-9'>
+            <Section>
                 <Container>
                     <Heading as='h2' size='3xl' className='mb-8 text-center'>
                         Food Categories:
@@ -32,23 +35,23 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ categories }) => {
                         }
                     </div>
                 </Container>
-            </section>
+            </Section>
         </Page>
     );
 };
 
-export const getServerSideProps: GetServerSideProps<CategoriesPageProps> = async () => {
-    const categories = await getAllCategories();
-    if (categories.data === null || categories.ok === false) {
-        throw new Error('Failed to fetch all categories');
+export const getServerSideProps = withServerSideProps<CategoriesPageProps>(async () => {
+    const { code, data, error, ok } = await getAllCategories();
+    if (data === null || ok === false) {
+        throw new ServerError(code, `Error happened while retrieving categories. Information: ${error}`);
     }
 
     return {
         props: {
-            categories: categories.data.categories
+            categories: data.categories,
         }
     };
-};
+});
 
 interface CategoriesPageProps {
     categories: CategoryList;

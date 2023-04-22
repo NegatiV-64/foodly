@@ -9,8 +9,8 @@ import Image from 'next/image';
 import type { CartItem } from '@/context/cart';
 import { useCart } from '@/context/cart';
 import { Text } from '@/components/ui/Text';
-import { getBackendFileUrl } from '@/utils/getBackendFileUrl.util';
-import { moneyFormat } from '@/utils/moneyFormat.util';
+import { getBackendFileUrl } from '@/utils/get-backend-file-url.util';
+import { moneyFormat } from '@/utils/money-format.util';
 import { Link } from '@/components/navigation/Link';
 import { RoutesConfig } from '@/config/routes.config';
 

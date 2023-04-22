@@ -1,5 +1,5 @@
-import type { Account } from '@/interfaces/account.interface';
-import { fetchHandler } from '@/utils/fetchHander.util';
+import type { Account } from '@/types/account.types';
+import { fetchHandler } from '@/utils/fetch-hander.util';
 
 export const updateAccount = async (body: UpdateAccountBody) => {
     const response = await fetchHandler<Account>(
@@ -8,7 +8,9 @@ export const updateAccount = async (body: UpdateAccountBody) => {
             method: 'PATCH',
             body: JSON.stringify(body),
         },
-        true,
+        {
+            isAuth: true,
+        }
     );
 
     return response;

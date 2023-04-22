@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router';
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { FC, ReactNode } from 'react';
-import { decodeJwt } from '@/utils/decodeJwt.util';
-import type { AcccessTokenData, RefreshTokenData } from '@/interfaces/auth.interface';
+import { decodeJwt } from '@/utils/decode-jwt.util';
+import type { AcccessTokenData, RefreshTokenData } from '@/types/auth.types';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
-import type { UserType } from '@/interfaces/user.interface';
+import type { UserType } from '@/types/user.types';
 import { RoutesConfig } from '@/config/routes.config';
 import { authRefresh } from '@/api/auth/refresh.api';
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/config/auth.config';
 
 const authContext = createContext<AuthContext>({} as AuthContext);
 
@@ -27,10 +28,10 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         }
 
         // Setting cookies to store tokens
-        setCookie('access_token', accessToken, {
+        setCookie(ACCESS_TOKEN_KEY, accessToken, {
             expires: new Date(accessTokenData.exp * 1000),
         });
-        setCookie('refresh_token', refreshToken, {
+        setCookie(REFRESH_TOKEN_KEY, refreshToken, {
             expires: new Date(refreshTokenData.exp * 1000),
         });
 
@@ -50,14 +51,14 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     function onLogout() {
         setCurrentUser(null);
         setUserStatus('anonymous');
-        deleteCookie('access_token');
-        deleteCookie('refresh_token');
+        deleteCookie(ACCESS_TOKEN_KEY);
+        deleteCookie(REFRESH_TOKEN_KEY);
         replace(RoutesConfig.Login);
     }
 
     async function onReload() {
-        const accessToken = getCookie('access_token') as string | undefined;
-        const refreshToken = getCookie('refresh_token') as string | undefined;
+        const accessToken = getCookie(ACCESS_TOKEN_KEY) as string | undefined;
+        const refreshToken = getCookie(REFRESH_TOKEN_KEY) as string | undefined;
 
         // If there are no tokens, redirect to login page
         if (accessToken === undefined && refreshToken === undefined) {
@@ -84,10 +85,10 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
             }
 
             // Setting cookies to store tokens
-            setCookie('access_token', data.refresh_token, {
+            setCookie(ACCESS_TOKEN_KEY, data.refresh_token, {
                 expires: new Date(accessTokenData.exp * 1000),
             });
-            setCookie('refresh_token', data.refresh_token, {
+            setCookie(REFRESH_TOKEN_KEY, data.refresh_token, {
                 expires: new Date(refreshTokenData.exp * 1000),
             });
 

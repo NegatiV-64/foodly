@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
+import { Section } from '@/components/ui/Section';
 import { Text } from '@/components/ui/Text';
 import { Page } from '@/components/utility/Page';
 import type { NextPage } from 'next';
@@ -9,7 +10,7 @@ import { HiOutlineMail, HiOutlinePhone } from 'react-icons/hi';
 const ContactPage: NextPage = () => {
     return (
         <Page title='Contacts'>
-            <section className='py-8'>
+            <Section>
                 <Container>
                     <div className='grid grid-cols-2 gap-x-7'>
                         <div className='rounded-lg bg-white py-8 px-4'>
@@ -83,7 +84,7 @@ const ContactPage: NextPage = () => {
                         </form>
                     </div>
                 </Container>
-            </section>
+            </Section>
         </Page>
     );
 };

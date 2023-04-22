@@ -4,13 +4,16 @@ import { Pagination } from '@/components/navigation/Pagination';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
 import { ProductCard } from '@/components/ui/ProductCard';
+import { Section } from '@/components/ui/Section';
 import { Page } from '@/components/utility/Page';
-import type { Category } from '@/interfaces/category.interface';
-import type { ProductList } from '@/interfaces/product.inteface';
-import { countTotalPages } from '@/utils/countTotalPages.util';
-import { queryBuilder } from '@/utils/queryBuilder.util';
-import { validateDynamicUrlPart } from '@/utils/validateDynamicUrlPart.util';
-import type { GetServerSideProps, NextPage } from 'next';
+import { ServerError } from '@/exceptions/server-error.exception';
+import type { Category } from '@/types/category.types';
+import type { ProductList } from '@/types/product.types';
+import { countTotalPages } from '@/utils/count-total-pages.util';
+import { queryBuilder } from '@/utils/query-builder.util';
+import { validateQueryParam } from '@/utils/validate-query-param.util';
+import { withServerSideProps } from '@/utils/with-server-side-props.util';
+import type { NextPage } from 'next';
 
 const CategoryPage: NextPage<CategoryPageProps> = ({ category, activePage, products, totalProducts }) => {
     function createPaginationHref(page: number) {
@@ -24,7 +27,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, activePage, produ
 
     return (
         <Page title={`${category.category_name}`}>
-            <section className='py-10'>
+            <Section>
                 <Container>
                     <Heading size='4xl' className='mb-7 text-center'>
                         {category.category_icon} {category.category_name}
@@ -48,45 +51,35 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, activePage, produ
                         hrefGenerator={createPaginationHref}
                     />
                 </Container>
-            </section>
+            </Section>
         </Page>
     );
 };
 
-export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (context) => {
-    const categorySlug = validateDynamicUrlPart(context.params?.categorySlug, 'string');
-    if (!categorySlug) {
-        return {
-            notFound: true,
-        };
+export const getServerSideProps = withServerSideProps<CategoryPageProps>(async (context) => {
+    const categorySlug = validateQueryParam(context.params?.categorySlug, 'string');
+    if (categorySlug === null) {
+        throw new ServerError(404, 'Category not found');
     }
 
-    const activePage = validateDynamicUrlPart(context.query?.page, 'number') ?? 1;
-    const search = validateDynamicUrlPart(context.query?.search, 'string') ?? '';
-    const { data, ok } = await getProductsByCategory(categorySlug, activePage);
+    const activePage = validateQueryParam(context.query?.page, 'number') ?? 1;
+    const search = validateQueryParam(context.query?.search, 'string') ?? '';
+    const { data, ok, code, error } = await getProductsByCategory(categorySlug, activePage);
 
     if (data === null || ok === false) {
-        // I know that this is not the best way to handle the error, but
-        // I am lazy to do a better handling of the possible errors
-        // Btw, my backend is bullerproof, so this error will never happen :)
-
-        return {
-            notFound: true,
-        };
+        throw new ServerError(code, `Error happened while retrieving products. Information: ${error}`);
     }
 
     const { products, total } = data;
     let category = data.products.at(0)?.category as Category | undefined;
 
     if (category === undefined) {
-        const { data: categoryData, ok: categoryOk } = await getCategory(categorySlug);
-        if (categoryData === null || categoryOk === false) {
-            return {
-                notFound: true,
-            };
+        const categoryResponse = await getCategory(categorySlug);
+        if (categoryResponse.data === null || categoryResponse.ok === false) {
+            throw new ServerError(categoryResponse.code, `Error happened while retrieving category. Information: ${categoryResponse.error}`);
         }
 
-        category = categoryData;
+        category = categoryResponse.data;
     }
 
     return {
@@ -98,7 +91,7 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
             search: search,
         },
     };
-};
+});
 
 interface CategoryPageProps {
     category: Category;

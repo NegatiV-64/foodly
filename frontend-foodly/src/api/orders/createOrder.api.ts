@@ -1,5 +1,5 @@
-import type { Product } from '@/interfaces/product.inteface';
-import { fetchHandler } from '@/utils/fetchHander.util';
+import type { Product } from '@/types/product.types';
+import { fetchHandler } from '@/utils/fetch-hander.util';
 
 export const createOrder = async (body: CreateOrderBody) => {
     const response = await fetchHandler<CreateOrderResponse>('/orders',
@@ -7,7 +7,9 @@ export const createOrder = async (body: CreateOrderBody) => {
             method: 'POST',
             body: JSON.stringify(body),
         },
-        true,
+        {
+            isAuth: true
+        }
     );
 
     return response;

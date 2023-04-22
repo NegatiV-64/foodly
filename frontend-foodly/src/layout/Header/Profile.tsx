@@ -32,7 +32,7 @@ export const Profile = () => {
                                 className={cn(dropdownStyles.content, dropdownStyles.contentOpen, dropdownStyles.contentClosed)}
                             >
                                 <Item className={dropdownStyles.item}>
-                                    <Link href={'#'}>
+                                    <Link href={RoutesConfig.Account}>
                                         View Account
                                     </Link>
                                 </Item>

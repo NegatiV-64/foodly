@@ -1,22 +1,22 @@
 import { fetchHandler } from '@/utils/fetch-hander.util';
 
-export const createPayment = async (body: CreatePaymentBody) => {
+export const singUp = async (body: singUpBody) => {
     const response = await fetchHandler(
-        '/payments',
+        '/auth/register',
         {
             method: 'POST',
             body: JSON.stringify(body),
         },
         {
-            isAuth: true
+            isAuth: false,
         }
     );
 
     return response;
 };
 
-export interface CreatePaymentBody {
-    order_id: string;
-    payment_type: 'CASH' | 'CREDIT';
-    payment_credit_card?: string;
+interface singUpBody {
+    email: string;
+    phone: string;
+    password: string;
 }

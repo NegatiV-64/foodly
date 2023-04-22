@@ -1,9 +1,8 @@
-import type { GetServerSideProps, NextPage } from 'next';
+import type { NextPage } from 'next';
 import { getAllCategories } from '@/api/categories/getAllCategories.api';
-import { getPopularProducts } from '@/api/products/getPopularProducts.api';
+import { getLatestProducts } from '@/api/products/getLatestProducts.api';
 import { Page } from '@/components/utility/Page';
-import type { CategoryList } from '@/interfaces/category.interface';
-import type { ReactNode } from 'react';
+import type { CategoryList } from '@/types/category.types';
 import { Container } from '@/components/ui/Container';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
@@ -15,22 +14,24 @@ import { RoutesConfig } from '@/config/routes.config';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
 import Image from 'next/image';
-import type { ProductList } from '@/interfaces/product.inteface';
+import type { ProductList } from '@/types/product.types';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { HiArrowRight, HiOutlineClock, HiOutlineFire, HiOutlineMail, HiOutlinePhone, HiOutlineTruck } from 'react-icons/hi';
 import { Button } from '@/components/ui/Button';
 import { Link } from '@/components/navigation/Link';
+import { ServerError } from '@/exceptions/server-error.exception';
+import { withServerSideProps } from '@/utils/with-server-side-props.util';
+import { useForm } from 'react-hook-form';
+import { Section } from '@/components/ui/Section';
+import { InputField } from '@/components/form/InputField';
+import { TextAreaField } from '@/components/form/TextareaField';
 
-const HomePage: NextPage<HomePageProps> = ({ categories, popularProducts }) => {
-    const formStyles = {
-        label: 'sr-only',
-        input: 'block w-full rounded-md border-gray-300 py-3 px-4 placeholder-gray-500 shadow-sm focus:border-orange-500 focus:ring-orange-500',
-        textarea: 'block w-full rounded-md border-gray-300 py-3 px-4 placeholder-gray-500 shadow-sm focus:border-orange-500 focus:ring-orange-500'
-    };
+const HomePage: NextPage<HomePageProps> = ({ categories, latestProducts }) => {
+    const { register } = useForm<ContactFormFields>();
 
     return (
         <Page title='Home'>
-            <Section className='flex items-center py-10'>
+            <Section className='flex items-center'>
                 <Container className='grid grid-cols-[1.1fr,0.9fr]'>
                     <div className='flex h-full flex-col justify-center gap-5'>
                         <Heading size='6xl' className='text-center'>
@@ -102,7 +103,7 @@ const HomePage: NextPage<HomePageProps> = ({ categories, popularProducts }) => {
                     <Heading size='3xl' className='mb-3'>Popular Products</Heading>
                     <div className=' grid grid-cols-4 gap-7'>
                         {
-                            popularProducts.map((product) => (
+                            latestProducts.map((product) => (
                                 <ProductCard
                                     key={product.product_id}
                                     product={product}
@@ -160,33 +161,33 @@ const HomePage: NextPage<HomePageProps> = ({ categories, popularProducts }) => {
                         </a>
                     </div>
                     <form className='grid grid-cols-1 gap-y-6'>
-                        <input
-                            className={formStyles.input}
+                        <InputField
                             type='text'
                             id='full-name'
-                            name='full-name'
-                            placeholder="Full name"
-                            autoComplete="full-name"
+                            placeholder='Full name'
+                            autoComplete='full-name'
                             required={true}
+                            {...register('fullname')}
                         />
-                        <input
-                            className={formStyles.input}
+                        <InputField
                             type='email'
                             id='email'
-                            name="email"
-                            autoComplete="email"
-                            placeholder="Email address"
+                            placeholder='Email address'
+                            autoComplete='email'
                             required={true}
+                            {...register('email')}
                         />
-                        <textarea
-                            className={formStyles.textarea}
+                        <TextAreaField
+                            id='message'
+                            placeholder='Message'
+                            required={true}
                             rows={4}
-                            id="message"
-                            name="message"
-                            placeholder="Message"
                             defaultValue={''}
+                            {...register('message')}
                         />
-                        <Button type='submit'>Submit</Button>
+                        <Button type='submit'>
+                            Submit
+                        </Button>
                     </form>
                 </Container>
             </Section>
@@ -194,37 +195,40 @@ const HomePage: NextPage<HomePageProps> = ({ categories, popularProducts }) => {
     );
 };
 
-const Section = ({ children, className }: { className?: string; children: ReactNode }) => (
-    <section className={cn('py-10', className)}>
-        {children}
-    </section>
-);
-
-export const getServerSideProps: GetServerSideProps<HomePageProps> = async () => {
-    const [categories, popularProducts] = await Promise.all([
+export const getServerSideProps = withServerSideProps<HomePageProps>(async () => {
+    const [categoriesResponse, latestProductsResponse] = await Promise.all([
         getAllCategories(),
-        getPopularProducts(),
+        getLatestProducts(),
     ]);
 
-    if (categories.ok === false || categories.data === null) {
-        throw new Error('Error fetching categories');
+    if (categoriesResponse.ok === false || categoriesResponse.data === null) {
+        throw new ServerError(categoriesResponse.code, `Error happened while retrieving categories. Information: ${categoriesResponse.error}`);
     }
 
-    if (popularProducts.ok === false || popularProducts.data === null) {
-        throw new Error('Error fetching popular products');
+    if (latestProductsResponse.ok === false || latestProductsResponse.data === null) {
+        throw new ServerError(latestProductsResponse.code, `Error happened while retrieving latest products. Information: ${latestProductsResponse.error}`);
     }
+
+    const categories = categoriesResponse.data.categories;
+    const latestProducts = latestProductsResponse.data.products;
 
     return {
         props: {
-            categories: categories.data.categories,
-            popularProducts: popularProducts.data.products,
+            categories,
+            latestProducts,
         }
     };
-};
+});
 
 interface HomePageProps {
     categories: CategoryList;
-    popularProducts: ProductList;
+    latestProducts: ProductList;
+}
+
+interface ContactFormFields {
+    fullname: string;
+    email: string;
+    message: string;
 }
 
 export default HomePage;

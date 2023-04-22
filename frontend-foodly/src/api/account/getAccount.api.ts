@@ -1,10 +1,18 @@
-import type { Account } from '@/interfaces/account.interface';
-import { fetchHandler } from '@/utils/fetchHander.util';
+import type { Account } from '@/types/account.types';
+import { fetchHandler } from '@/utils/fetch-hander.util';
+import type { GetServerSidePropsContext } from 'next';
 
-export async function getAccount() {
-    const response = await fetchHandler<Account>('/account', {
-        method: 'GET',
-    }, true);
+export async function getAccount(context?: GetServerSidePropsContext) {
+    const response = await fetchHandler<Account>(
+        '/account',
+        {
+            method: 'GET',
+        },
+        {
+            context: context,
+            isAuth: true,
+        }
+    );
 
     return response;
 }
