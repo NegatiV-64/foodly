@@ -7,13 +7,21 @@ import { DialogFooter } from '@/components/feedback/DialogFooter';
 import { DialogHeader } from '@/components/feedback/DialogHeader';
 import { DialogTitle } from '@/components/feedback/DialogTitle';
 import { InputField } from '@/components/form/InputField';
+import { Link } from '@/components/navigation/Link';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
 import { Section } from '@/components/ui/Section';
+import { Table } from '@/components/ui/Table';
+import { TableBody } from '@/components/ui/TableBody';
+import { TableCell } from '@/components/ui/TableCell';
+import { TableHead } from '@/components/ui/TableHead';
+import { TableHeadCell } from '@/components/ui/TableHeadCell';
+import { TableRow } from '@/components/ui/TableRow';
 import { Text } from '@/components/ui/Text';
 import { Page } from '@/components/utility/Page';
 import { Protected } from '@/components/utility/Protected';
+import { RoutesConfig } from '@/config/routes.config';
 import { ServerError } from '@/exceptions/server-error.exception';
 import { useDialog } from '@/hooks/useDialog.hook';
 import type { Account } from '@/types/account.types';
@@ -148,42 +156,43 @@ const AccountPage: NextPage<AccountPageProps> = ({ account }) => {
                                 {
                                     accountData.order.length > 0
                                         ?
-                                        <table className='table-fixed'>
-                                            {
-                                                accountData.order.map((order, index) => (
-                                                    <tr className='border' key={order.order_id}>
-                                                        <td className='border-r py-1 px-2'>{index + 1}</td>
-                                                        <td className='border-r py-1 px-2'>{Time(order.order_created_at).format('DD/MM/YYYY HH:mm')}</td>
-                                                        <td className='border-r py-1 px-2'>{order.order_status}</td>
-                                                        <td className='py-1 px-2'>{moneyFormat(order.order_price)} soms</td>
-                                                    </tr>
-                                                ))
-                                            }
-                                        </table>
+                                        <div>
+                                            <Table className='table-fixed'>
+                                                <TableHead>
+                                                    <TableHeadCell>
+                                                        #
+                                                    </TableHeadCell>
+                                                    <TableHeadCell>
+                                                        Date
+                                                    </TableHeadCell>
+                                                    <TableHeadCell>
+                                                        Status
+                                                    </TableHeadCell>
+                                                    <TableHeadCell>
+                                                        Price
+                                                    </TableHeadCell>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {
+                                                        accountData.order.map((order, index) => (
+                                                            <TableRow key={order.order_id}>
+                                                                <TableCell>{index + 1}</TableCell>
+                                                                <TableCell>{Time(order.order_created_at).format('DD/MM/YYYY HH:mm')}</TableCell>
+                                                                <TableCell>{order.order_status}</TableCell>
+                                                                <TableCell>{moneyFormat(order.order_price)} soms</TableCell>
+                                                            </TableRow>
+                                                        ))
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                            <div className='mt-4'>
+                                                <Link size='small' href={RoutesConfig.Orders}>
+                                                    View all orders
+                                                </Link>
+                                            </div>
+                                        </div>
                                         :
                                         <p>You have no orders</p>
-                                }
-                            </div>
-                            <Heading>
-                                Your payments
-                            </Heading>
-                            <div className='mt-4 rounded-lg bg-white px-5 pt-2 pb-6'>
-                                {
-                                    accountData.payment.length > 0
-                                        ?
-                                        <table className='table-fixed'>
-                                            {
-                                                accountData.payment.map((payment, index) => (
-                                                    <tr className='border' key={payment.payment_id}>
-                                                        <td className='border-r py-1 px-2'>{index + 1}</td>
-                                                        <td className='border-r py-1 px-2'>{Time(payment.payment_date).format('DD/MM/YYYY HH:mm')}</td>
-                                                        <td className='border-r py-1 px-2'>{payment.payment_type}</td>
-                                                    </tr>
-                                                ))
-                                            }
-                                        </table>
-                                        :
-                                        <p>You have no payments</p>
                                 }
                             </div>
                         </div>
