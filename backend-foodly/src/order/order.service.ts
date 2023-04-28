@@ -196,7 +196,8 @@ export class OrderService {
                                 product_description: true,
                                 product_image: true,
                             }
-                        }
+                        },
+                        amount: true,
                     }
                 },
                 user: {
@@ -268,7 +269,14 @@ export class OrderService {
         // Modify the order to match the GetOrder interface
         const order: GetOrderReturnType = {
             ...dbOrder,
-            products: dbOrder.products.map(product => product.product),
+            products: dbOrder.products.map(product => ({
+                product_description: product.product.product_description,
+                product_id: product.product.product_id,
+                product_image: product.product.product_image,
+                product_name: product.product.product_name,
+                product_price: product.product.product_price,
+                amount: product.amount,
+            })),
         };
 
         return order;
@@ -325,7 +333,8 @@ export class OrderService {
                                     product_description: true,
                                     product_image: true,
                                 }
-                            }
+                            },
+                            amount: true,
                         }
                     },
                     user: {
@@ -369,7 +378,14 @@ export class OrderService {
 
             const updatedOrder: UpdateOrderReturnType = {
                 ...dbUpdatedOrder,
-                products: dbUpdatedOrder.products.map(product => product.product),
+                products: dbUpdatedOrder.products.map(product => ({
+                    product_description: product.product.product_description,
+                    product_id: product.product.product_id,
+                    product_image: product.product.product_image,
+                    product_name: product.product.product_name,
+                    product_price: product.product.product_price,
+                    amount: product.amount,
+                })),
             };
 
             return updatedOrder;
@@ -392,8 +408,9 @@ export class OrderService {
                                 product_price: true,
                                 product_description: true,
                                 product_image: true,
-                            }
-                        }
+                            },
+                        },
+                        amount: true,
                     }
                 },
                 user: {
@@ -437,7 +454,14 @@ export class OrderService {
 
         const updatedOrder: UpdateOrderReturnType = {
             ...dbUpdatedOrder,
-            products: dbUpdatedOrder.products.map(product => product.product),
+            products: dbUpdatedOrder.products.map(product => ({
+                product_description: product.product.product_description,
+                product_id: product.product.product_id,
+                product_image: product.product.product_image,
+                product_name: product.product.product_name,
+                product_price: product.product.product_price,
+                amount: product.amount,
+            })),
         };
 
         return updatedOrder;

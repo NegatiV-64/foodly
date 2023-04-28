@@ -25,9 +25,14 @@ export class DeliveryService {
         const delivery = await this.prisma.delivery.create({
             data: {
                 delivery_address: delivery_address,
-                delivery_order_id: order_id,
                 delivery_price: +order.order_price + delivery_charge,
                 delivery_status: 'PENDING',
+                delivery_order_id: order_id,
+                Order: {
+                    connect: {
+                        order_id: order_id
+                    }
+                }
             }
         });
 

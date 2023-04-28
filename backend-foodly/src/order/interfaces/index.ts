@@ -20,7 +20,7 @@ export interface GetOrderReturnType {
     order_price: Decimal | number;
     order_status: OrderStatus;
     order_user_id: number;
-    products: Array<Pick<Product, 'product_id' | 'product_description' | 'product_image' | 'product_name'> & { product_price: number | Decimal }>;
+    products: Array<Pick<Product, 'product_id' | 'product_description' | 'product_image' | 'product_name'> & { product_price: number | Decimal; amount: number }>;
     user: {
         user_id: number;
         user_firstname: string | null;

@@ -17,6 +17,9 @@ class GetOrderProduct {
 
     @ApiProperty()
     product_image: string;
+
+    @ApiProperty()
+    amount: number;
 }
 
 class GetOrderUser {

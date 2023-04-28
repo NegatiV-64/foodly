@@ -17,6 +17,9 @@ class UpdateOrderStatusProduct {
 
     @ApiProperty()
     product_image: string;
+
+    @ApiProperty()
+    amount: number;
 }
 
 class UpdateOrderStatusUser {
