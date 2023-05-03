@@ -1,5 +1,5 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import type { Order, Prisma } from '@prisma/client';
+import type { DeliveryStatus, Order, OrderStatus, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DELIVERY_ERRORS, ORDER_ERRORS, USER_ERRORS } from 'src/shared/errors';
 import { dayjs } from 'src/shared/libs/dayjs.lib';
@@ -380,6 +380,11 @@ export class DeliveryService {
                 delivery_status: delivery_status,
                 delivery_order_id: order_id,
                 delivery_price: newDeliveryPrice,
+                Order: {
+                    update: {
+                        order_status: this.getOrderStatusForUpdate(delivery_status)
+                    }
+                }
             },
             select: {
                 delivery_address: true,
@@ -559,5 +564,36 @@ export class DeliveryService {
         }
 
         return returnedDeliveryBoyId;
+    }
+
+    private getOrderStatusForUpdate(deliveryStatus: DeliveryStatus | undefined) {
+        if (deliveryStatus === undefined) {
+            return undefined;
+        }
+
+        let returnedOrderStatus: OrderStatus;
+
+        switch (deliveryStatus) {
+            case 'CANCELED':
+                returnedOrderStatus = 'CANCEL';
+                break;
+            case 'FAILED':
+                returnedOrderStatus = 'CANCEL';
+                break;
+            case 'ON_WAY':
+                returnedOrderStatus = 'IN_PROGRESS';
+                break;
+            case 'PENDING':
+                returnedOrderStatus = 'HOLD';
+                break;
+            case 'DONE':
+                returnedOrderStatus = 'FINISHED';
+                break;
+            default:
+                returnedOrderStatus = 'HOLD';
+                break;
+        }
+
+        return returnedOrderStatus;
     }
 }

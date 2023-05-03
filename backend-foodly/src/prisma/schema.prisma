@@ -106,6 +106,8 @@ enum UserRole {
 }
 
 enum OrderStatus {
+  FINISHED
+  IN_PROGRESS
   HOLD
   PAID
   CANCEL
