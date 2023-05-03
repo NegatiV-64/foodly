@@ -88,7 +88,9 @@ export class PaymentService {
         const paymentWhere = {
             payment_user_id: isUserEmployee ? payer_id : userId,
             payment_type: type,
-            payment_date: created_at ? new Date(created_at) : undefined,
+            payment_date: {
+                gte: created_at ? new Date(created_at) : undefined,
+            },
             order: {
                 order_id: order_id
             },
