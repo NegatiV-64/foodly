@@ -10,7 +10,12 @@
     "back:dev": "cd backend-foodly && npm run dev",
     "back:build": "cd backend-foodly && npm run build",
     "back:install": "cd backend-foodly && npm install",
-    "back:migrate": "cd backend-foodly && npx prisma migrate dev"
+    "back:migrate": "cd backend-foodly && npx prisma migrate dev",
+    "admin:install": "cd admin-foodly && npm install",
+    "admin:dev": "cd admin-foodly && npm run dev",
+    "admin:build": "cd admin-foodly && npm run build",
+    "delivery:install": "cd delivery-foodly && npm install",
+    "delivery:dev": "cd delivery-foodly && npm run dev"
   },
   "repository": {
     "type": "git",
