@@ -18,6 +18,7 @@ import type { FullOrder } from '@/types/order.types';
 import { capitalize } from '@/utils/capitalize.util';
 import { getBackendFileUrl } from '@/utils/get-backend-file-url.util';
 import { moneyFormat } from '@/utils/money-format.util';
+import { removeDashUnderscore } from '@/utils/remove-dash-underscore.util';
 import { Time } from '@/utils/time.util';
 import { validateQueryParam } from '@/utils/validate-query-param.util';
 import { withServerSideProps } from '@/utils/with-server-side-props.util';
@@ -57,7 +58,7 @@ const AccountOrderPage: NextPage<AccountOrderPageProps> = ({ order }) => {
                             </ContentBlock>
                             <ContentBlock title={'Order Status'}>
                                 <ContentText>
-                                    {capitalize(order.order_status)}
+                                    {capitalize(removeDashUnderscore(order.order_status))}
                                 </ContentText>
                             </ContentBlock>
                         </ContentColumn>

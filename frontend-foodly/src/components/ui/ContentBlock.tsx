@@ -7,7 +7,7 @@ export const ContentBlock: FC<ContentBlockProps> = ({
 }) => {
     return (
         <div
-            className={cn('tw-flex tw-flex-col tw-gap-2', className)}
+            className={cn('flex flex-col gap-2', className)}
             {...props}
         >
             <Heading as='h4' weight='normal' size='lg' className='text-slate-500'>

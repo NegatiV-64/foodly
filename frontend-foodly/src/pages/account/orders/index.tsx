@@ -14,8 +14,10 @@ import { Page } from '@/components/utility/Page';
 import { RoutesConfig } from '@/config/routes.config';
 import { ServerError } from '@/exceptions/server-error.exception';
 import type { Order } from '@/types/order.types';
+import { capitalize } from '@/utils/capitalize.util';
 import { countTotalPages } from '@/utils/count-total-pages.util';
 import { moneyFormat } from '@/utils/money-format.util';
+import { removeDashUnderscore } from '@/utils/remove-dash-underscore.util';
 import { Time } from '@/utils/time.util';
 import { validateQueryParam } from '@/utils/validate-query-param.util';
 import { withServerSideProps } from '@/utils/with-server-side-props.util';
@@ -56,7 +58,7 @@ export const AccountOrdersPage: NextPage<AccountOrdersPageProps> = ({ orders, pa
                                     <TableRow key={order.order_id}>
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{Time(order.order_created_at).format('DD/MM/YYYY HH:mm')}</TableCell>
-                                        <TableCell>{order.order_status}</TableCell>
+                                        <TableCell>{capitalize(removeDashUnderscore(order.order_status))}</TableCell>
                                         <TableCell>{moneyFormat(order.order_price)} soms</TableCell>
                                         <TableCell>{order.order_delivery_id ? 'Assigned' : 'No assignment'}</TableCell>
                                         <TableCell>

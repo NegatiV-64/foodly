@@ -25,7 +25,9 @@ import { RoutesConfig } from '@/config/routes.config';
 import { ServerError } from '@/exceptions/server-error.exception';
 import { useDialog } from '@/hooks/useDialog.hook';
 import type { Account } from '@/types/account.types';
+import { capitalize } from '@/utils/capitalize.util';
 import { moneyFormat } from '@/utils/money-format.util';
+import { removeDashUnderscore } from '@/utils/remove-dash-underscore.util';
 import { Time } from '@/utils/time.util';
 import { withServerSideProps } from '@/utils/with-server-side-props.util';
 import type { NextPage } from 'next';
@@ -178,7 +180,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ account }) => {
                                                             <TableRow key={order.order_id}>
                                                                 <TableCell>{index + 1}</TableCell>
                                                                 <TableCell>{Time(order.order_created_at).format('DD/MM/YYYY HH:mm')}</TableCell>
-                                                                <TableCell>{order.order_status}</TableCell>
+                                                                <TableCell>{capitalize(removeDashUnderscore(order.order_status))}</TableCell>
                                                                 <TableCell>{moneyFormat(order.order_price)} soms</TableCell>
                                                             </TableRow>
                                                         ))
