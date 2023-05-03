@@ -3,12 +3,12 @@ import type { User } from '@/interfaces/user.interface';
 import { fetchHandler } from '@/utils/fetch-handler.util';
 import type { GetServerSidePropsContext } from 'next';
 
-export async function getEmployees({ order = 'desc', page, sort = 'user_id', type }: GetEmployeesQueryParams, context: GetServerSidePropsContext) {
+export async function getEmployees({ order = 'desc', page, sort = 'user_id', type, search }: GetEmployeesQueryParams, context: GetServerSidePropsContext) {
     const skip = page ? (page - 1) * 10 : null;
     const take = page ? amountToDisplay : null;
 
     const response = await fetchHandler<GetEmployeesResponse>(
-        `/users?role=${type ?? ''}&take=${take ?? ''}&skip=${skip ?? ''}&order=${order}&sort=${sort}`,
+        `/users?role=${type ?? ''}&take=${take ?? ''}&skip=${skip ?? ''}&order=${order}&sort=${sort}&search=${search}`,
         {
             method: 'GET',
         },

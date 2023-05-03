@@ -141,7 +141,7 @@ export const CustomersPage: NextPage<CustomersPageProps> = ({ customers, totalCu
                                     }
                                 }}
                                 defaultValue={searchQuery ?? ''}
-                                {...register('sort')}
+                                {...register('search')}
                             />
                             <Select
                                 size='small'

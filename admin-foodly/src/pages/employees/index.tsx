@@ -169,7 +169,7 @@ export const EmployeesPage: NextPage<EmployeesPageProps> = ({ employees, totalEm
                                     }
                                 }}
                                 defaultValue={searchQuery ?? ''}
-                                {...register('sort')}
+                                {...register('search')}
                             />
                             <Select
                                 size='small'
