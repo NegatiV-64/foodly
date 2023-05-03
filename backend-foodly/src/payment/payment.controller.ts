@@ -10,6 +10,7 @@ import type { GetPaymentsQueryParams } from './interfaces';
 import { PaymentService } from './payment.service';
 import { ValidatePaymentTypePipe } from './pipes';
 import { GetPaymentResponse, GetPaymentsResponse } from './responses';
+import { ParseOptionalStringPipe } from 'src/shared/pipe/parse-optional-string.pipe';
 
 @Controller('payments')
 @ApiTags('Payment')
@@ -79,7 +80,7 @@ export class PaymentController {
         @Query('created_at', ParseDateStringPipe) created_at?: string,
         @Query('type', ValidatePaymentTypePipe) type?: PaymentType,
         @Query('payer_id', ParseOptionalIntPipe) payer_id?: number,
-        @Query('order_id') order_id?: string,
+        @Query('order_id', ParseOptionalStringPipe) order_id?: string,
     ) {
         const paymentsQueryParams: GetPaymentsQueryParams = {
             created_at,
