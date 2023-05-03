@@ -1,4 +1,4 @@
-import { fetchHandler } from '../../utils/fetchHandler.util';
+import { fetchHandler } from '../../utils/fetch-handler.util';
 
 export const refreshTokens = async (refreshToken: string) => {
     const response = await fetchHandler<AuthRefreshResponse>(

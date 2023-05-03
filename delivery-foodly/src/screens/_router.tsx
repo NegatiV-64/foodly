@@ -11,7 +11,7 @@ import { Fragment } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '../styles/colors';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const TabsNavigator = () => {
@@ -22,7 +22,28 @@ const TabsNavigator = () => {
     return (
         <Tab.Navigator
             screenOptions={{
-                headerShown: false,
+                headerStyle: {
+                    backgroundColor: Colors.amber[600],
+                },
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    color: Colors.white,
+                    fontSize: 24,
+                },
+                headerTitleContainerStyle: {
+                    paddingBottom: 10,
+                },
+                headerRightContainerStyle: {
+                    paddingBottom: 10,
+                },
+                headerRight() {
+                    return <MaterialIcons
+                        name="notifications"
+                        size={iconSize}
+                        color={Colors.white}
+                        style={tabNavigatorStyles.headerRightIcon}
+                    />;
+                },
                 tabBarStyle: {
                     height: 60 + bottom,
                     backgroundColor: Colors.amber[600],
@@ -80,6 +101,13 @@ const TabsNavigator = () => {
     );
 };
 
+const tabNavigatorStyles = StyleSheet.create({
+    headerRightIcon: {
+        marginRight: 20,
+        fontSize: 30,
+    }
+});
+
 const RootStack = createStackNavigator<RootStackParamList>();
 const RootStackNavigator = () => {
     const { status } = useAuth();
@@ -105,7 +133,24 @@ const RootStackNavigator = () => {
                             name="Tabs"
                             component={TabsNavigator}
                         />
-                        <RootStack.Screen name="Delivery" component={DeliveryScreen} />
+                        <RootStack.Screen
+                            name="Delivery"
+                            component={DeliveryScreen}
+                            options={{
+                                headerStyle: {
+                                    backgroundColor: Colors.amber[600],
+                                },
+                                headerTitleAlign: 'center',
+                                headerTitleStyle: {
+                                    color: Colors.white,
+                                },
+                                headerBackTitle: 'To Deliveries',
+                                headerBackTitleStyle: {
+                                    color: Colors.white,
+                                },
+                                headerTintColor: Colors.white,
+                            }}
+                        />
                     </Fragment>
             }
         </RootStack.Navigator>

@@ -1,12 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { decodeJwt } from './decodeJwt.util';
+import { decodeJwt } from './decode-jwt.util';
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '../config/auth.config';
 import { BACKEND_URL } from '../config/env.config';
 import type { RefreshTokenData, AcccessTokenData } from '../types/auth.types';
-
-class FetchError {
-    constructor(public code: number, public error: string) { }
-}
+import { FetchError } from '../exceptions/fetch-error.exception';
 
 export const fetchHandler = async <ResponseData = unknown, ResponseError = unknown>(
     url: FetchUrl,
@@ -153,7 +150,7 @@ export const fetchHandler = async <ResponseData = unknown, ResponseError = unkno
         if (error instanceof FetchError) {
             return {
                 code: error.code,
-                error: JSON.parse(error.error),
+                error: JSON.parse(error.message),
                 ok: false,
                 data: null,
             };
@@ -272,7 +269,7 @@ type FetchConfig = {
     isJson?: boolean;
 };
 
-interface FetchHandler<Data = unknown, Error = unknown> {
+export interface FetchHandler<Data = unknown, Error = unknown> {
     code: number;
     ok: boolean;
     data: Data | null;

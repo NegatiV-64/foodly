@@ -2,7 +2,7 @@ import type { ComponentPropsWithoutRef, FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export const Screen: FC<ScreenProps> = ({ hasSafeArea = true, style, children, ...props }) => {
+export const Screen: FC<ScreenProps> = ({ hasSafeArea = false, style, children, ...props }) => {
     const insets = useSafeAreaInsets();
 
     const insetsConfig = {

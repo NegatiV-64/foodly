@@ -1,4 +1,4 @@
-import { fetchHandler } from '../../utils/fetchHandler.util';
+import { fetchHandler } from '../../utils/fetch-handler.util';
 
 export const login = async (body: LoginBody) => {
     const response = await fetchHandler<LoginResponse>(

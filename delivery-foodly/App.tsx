@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
 import { Colors } from './src/styles/colors';
 import type { MD3Theme} from 'react-native-paper';
 import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
@@ -22,12 +22,20 @@ const theme: MD3Theme = {
   ...DefaultTheme,
 };
 
-export default function App() {
+const navigationTheme = {
+  ...NavigationDefaultTheme,
+  colors: {
+    ...NavigationDefaultTheme.colors,
+    background: Colors.white,
+  }
+};
+
+export default function App(): JSX.Element {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <PaperProvider theme={theme}>
-          <NavigationContainer>
+          <NavigationContainer theme={navigationTheme}>
             <Router />
             <StatusBar style="dark" backgroundColor={Colors.amber[500]} />
           </NavigationContainer>

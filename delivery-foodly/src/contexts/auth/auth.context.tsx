@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { refreshTokens } from '../../api/auth/refresh-tokens.api';
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '../../config/auth.config';
 import type { AcccessTokenData, RefreshTokenData } from '../../types/auth.types';
-import { decodeJwt } from '../../utils/decodeJwt.util';
+import { decodeJwt } from '../../utils/decode-jwt.util';
 import * as SplashScreen from 'expo-splash-screen';
 import { Colors } from '../../styles/colors';
 
